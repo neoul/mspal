@@ -1,8 +1,15 @@
-#include <cstdlib>
+// #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <pal.h>
 
-std::string say_hello() { return std::string("Hello, CMake world!"); }
+// #undef function_name
+
+std::string say_hello() {
+  SYSTEMTIME TheTime;
+  GetSystemTime(&TheTime);
+  return std::string("Hello, CMake world!") + std::to_string(TheTime.wYear);
+}
 
 int main() {
   std::cout << say_hello() << std::endl;
