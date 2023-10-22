@@ -1,6 +1,5 @@
 
 include(configurepaths.cmake)
-include(functions.cmake)
 include(configuretools.cmake)
 
 set(CMAKE_C_STANDARD 11)

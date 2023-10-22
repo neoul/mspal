@@ -214,39 +214,76 @@ if(NOT CLR_CMAKE_USE_SYSTEM_LIBUNWIND)
 endif(NOT CLR_CMAKE_USE_SYSTEM_LIBUNWIND)
 
 add_library(coreclrpal
-  STATIC
   ${SOURCES}
   ${ARCH_SOURCES}
   ${PLATFORM_SOURCES}
   ${LIBUNWIND_OBJECTS}
 )
 
-# Build separate pal library for DAC (addition to regular pal library)
-if(CLR_CMAKE_TARGET_OSX)
-  set(LIBUNWIND_DAC_OBJECTS $<TARGET_OBJECTS:libunwind_dac>)
+#------------------------------------
+# Definitions (for platform)
+#-----------------------------------
+# message(WARNING "CLR_CMAKE_HOST_ARCH_AMD64 = ${CLR_CMAKE_HOST_ARCH_AMD64}")
+if (CLR_CMAKE_HOST_ARCH_AMD64)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_AMD64 -DHOST_64BIT)
+elseif (CLR_CMAKE_HOST_ARCH_I386)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_X86)
+elseif (CLR_CMAKE_HOST_ARCH_ARM)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_ARM)
+elseif (CLR_CMAKE_HOST_ARCH_ARMV6)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_ARM)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_ARMV6)
+elseif (CLR_CMAKE_HOST_ARCH_ARM64)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_ARM64 -DHOST_64BIT)
+elseif (CLR_CMAKE_HOST_ARCH_LOONGARCH64)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_LOONGARCH64 -DHOST_64BIT)
+elseif (CLR_CMAKE_HOST_ARCH_RISCV64)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_RISCV64 -DHOST_64BIT)
+elseif (CLR_CMAKE_HOST_ARCH_S390X)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_S390X -DHOST_64BIT -DBIGENDIAN)
+elseif (CLR_CMAKE_HOST_ARCH_WASM)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_WASM -DHOST_32BIT=1)
+elseif (CLR_CMAKE_HOST_ARCH_MIPS64)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_MIPS64 -DHOST_64BIT=1)
+elseif (CLR_CMAKE_HOST_ARCH_POWERPC64)
+  target_compile_definitions(coreclrpal PUBLIC -DHOST_POWERPC64 -DHOST_64BIT)
+else ()
+  clr_unknown_arch()
+endif ()
+target_include_directories(coreclrpal PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../native)
+target_include_directories(coreclrpal PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../inc)
 
-  add_library(coreclrpal_dac STATIC
-    exception/remote-unwind.cpp
-    ${LIBUNWIND_DAC_OBJECTS}
-  )
+get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(dir ${dirs})
+  message(STATUS "dir='${dir}'")
+endforeach()
 
-  target_compile_definitions(coreclrpal_dac PUBLIC -DUNW_REMOTE_ONLY)
-else()
-  if(NOT FEATURE_CROSSBITNESS)
-    add_library(coreclrpal_dac STATIC
-      exception/remote-unwind.cpp
-    )
-  endif(NOT FEATURE_CROSSBITNESS)
-endif(CLR_CMAKE_TARGET_OSX)
+# # Build separate pal library for DAC (addition to regular pal library)
+# if(CLR_CMAKE_TARGET_OSX)
+#   set(LIBUNWIND_DAC_OBJECTS $<TARGET_OBJECTS:libunwind_dac>)
 
-if(NOT FEATURE_CROSSBITNESS)
-  target_include_directories(coreclrpal_dac PUBLIC
-    ${CLR_SRC_NATIVE_DIR}/external/libunwind/include
-    ${CLR_SRC_NATIVE_DIR}/external/libunwind/include/tdep
-    ${CLR_ARTIFACTS_OBJ_DIR}/external/libunwind/include
-    ${CLR_ARTIFACTS_OBJ_DIR}/external/libunwind/include/tdep
-  )
-endif(NOT FEATURE_CROSSBITNESS)
+#   add_library(coreclrpal_dac STATIC
+#     exception/remote-unwind.cpp
+#     ${LIBUNWIND_DAC_OBJECTS}
+#   )
+
+#   target_compile_definitions(coreclrpal_dac PUBLIC -DUNW_REMOTE_ONLY)
+# else()
+#   if(NOT FEATURE_CROSSBITNESS)
+#     add_library(coreclrpal_dac STATIC
+#       exception/remote-unwind.cpp
+#     )
+#   endif(NOT FEATURE_CROSSBITNESS)
+# endif(CLR_CMAKE_TARGET_OSX)
+
+# if(NOT FEATURE_CROSSBITNESS)
+#   target_include_directories(coreclrpal_dac PUBLIC
+#     ${CLR_SRC_NATIVE_DIR}/external/libunwind/include
+#     ${CLR_SRC_NATIVE_DIR}/external/libunwind/include/tdep
+#     ${CLR_ARTIFACTS_OBJ_DIR}/external/libunwind/include
+#     ${CLR_ARTIFACTS_OBJ_DIR}/external/libunwind/include/tdep
+#   )
+# endif(NOT FEATURE_CROSSBITNESS)
 
 # There is only one function exported in 'tracepointprovider.cpp' namely 'PAL_InitializeTracing',
 # which is guarded with '#if defined(__linux__)'. On macOS, Xcode issues the following warning:
@@ -336,9 +373,9 @@ if(CLR_CMAKE_TARGET_SUNOS)
   )
 endif(CLR_CMAKE_TARGET_SUNOS)
 
-if(FEATURE_EVENT_TRACE)
-  add_subdirectory(eventprovider)
-endif(FEATURE_EVENT_TRACE)
+# if(FEATURE_EVENT_TRACE)
+#   add_subdirectory(eventprovider)
+# endif(FEATURE_EVENT_TRACE)
 
 # # Install the static PAL library for VS
 # # install_clr (TARGETS coreclrpal DESTINATIONS lib)

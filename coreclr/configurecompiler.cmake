@@ -134,12 +134,14 @@ if (MSVC)
   set(CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO} /LTCG")
 
 elseif (CLR_CMAKE_HOST_UNIX)
+  if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+  endif(NOT CMAKE_BUILD_TYPE)
   # Set the values to display when interactively configuring CMAKE_BUILD_TYPE
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "DEBUG;CHECKED;RELEASE;RELWITHDEBINFO")
 
   # Use uppercase CMAKE_BUILD_TYPE for the string comparisons below
   string(TOUPPER ${CMAKE_BUILD_TYPE} UPPERCASE_CMAKE_BUILD_TYPE)
-  # set(UPPERCASE_CMAKE_BUILD_TYPE DEBUG)
 
   if(CLR_CMAKE_HOST_BROWSER OR CLR_CMAKE_HOST_WASI)
     # The emscripten build has additional warnings so -Werror breaks
