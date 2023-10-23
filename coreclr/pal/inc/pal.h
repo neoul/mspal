@@ -4371,7 +4371,7 @@ typedef struct _FILE PAL_FILE;
 #ifndef LC_ALL // willing
 #define LC_ALL          0
 #endif
-#ifndef LC_ALL // willing
+#ifndef LC_COLLATE // willing
 #define LC_COLLATE      1
 #endif
 #ifndef LC_CTYPE // willing
