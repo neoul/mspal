@@ -190,12 +190,13 @@ typedef __builtin_va_list va_list;
 
 /* We should consider if the va_arg definition here is actually necessary.
    Could we use the standard va_arg definition? */
-
+#ifndef va_start
 #define va_start    __builtin_va_start
 #define va_arg      __builtin_va_arg
 
 #define va_copy     __builtin_va_copy
 #define va_end      __builtin_va_end
+#endif
 
 #define VOID void
 
@@ -233,23 +234,35 @@ typedef char * va_list;
 
 #endif // __GNUC__
 
+#undef CHAR_BIT // willing
 #define CHAR_BIT      8
 
+#undef SCHAR_MIN // willing
 #define SCHAR_MIN   (-128)
+#undef SCHAR_MAX // willing
 #define SCHAR_MAX     127
+#undef UCHAR_MAX // willing
 #define UCHAR_MAX     0xff
 
+#undef SHRT_MIN // willing
 #define SHRT_MIN    (-32768)
+#undef SHRT_MAX // willing
 #define SHRT_MAX      32767
+#undef USHRT_MAX // willing
 #define USHRT_MAX     0xffff
 
+#undef INT_MIN // willing
 #define INT_MIN     (-2147483647 - 1)
+#undef INT_MAX // willing
 #define INT_MAX       2147483647
+#undef UINT_MAX // willing
 #define UINT_MAX      0xffffffff
 
 // LONG_MIN, LONG_MAX, ULONG_MAX -- use INT32_MIN etc. instead.
 
+#undef FLT_MAX // willing
 #define FLT_MAX 3.402823466e+38F
+#undef DBL_MAX // willing
 #define DBL_MAX 1.7976931348623157e+308
 
 #endif // !PAL_STDCPP_COMPAT
@@ -4083,6 +4096,7 @@ typedef unsigned int wint_t;
 #endif
 
 #ifndef PAL_STDCPP_COMPAT
+#ifndef __CORRECT_ISO_CPP_STRING_H_PROTO
 PALIMPORT void * __cdecl memcpy(void *, const void *, size_t);
 PALIMPORT int    __cdecl memcmp(const void *, const void *, size_t);
 PALIMPORT void * __cdecl memset(void *, int, size_t);
@@ -4124,6 +4138,7 @@ PALIMPORT int __cdecl iswxdigit(wint_t);
 PALIMPORT wint_t __cdecl towupper(wint_t);
 PALIMPORT wint_t __cdecl towlower(wint_t);
 PALIMPORT int remove(const char*);
+#endif
 #endif // PAL_STDCPP_COMPAT
 
 /* _TRUNCATE */
@@ -4299,10 +4314,11 @@ PALIMPORT float __cdecl truncf(float);
 
 #ifdef __cplusplus
 extern "C++" {
-
+#ifdef __CORRECT_ISO_CPP_STDLIB_H_PROTO
 inline __int64 abs(__int64 _X) {
     return llabs(_X);
 }
+#endif
 
 #ifdef __APPLE__
 inline __int64 abs(SSIZE_T _X) {

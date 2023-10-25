@@ -1,9 +1,4 @@
-// #include <cstdlib>
-#include <iostream>
-#include <string>
-#include <pal.h>
-
-// #undef function_name
+#include "hello-world.h"
 
 std::string say_hello() {
   SYSTEMTIME TheTime;
