@@ -702,6 +702,8 @@ typedef struct _FILETIME {
 
 typedef PVOID PSID;
 
+typedef unsigned char byte;
+
 #ifdef  __cplusplus
 }
 #endif
