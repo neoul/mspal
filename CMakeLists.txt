@@ -6,5 +6,7 @@ project(hello LANGUAGES CXX)
 add_subdirectory(coreclr)
 SET(CMAKE_VERBOSE_MAKEFILE true) # false if you don't want verbose output
 
+add_subdirectory(lib)
+
 add_executable(hello hello-world.cpp)
-target_link_libraries(hello PUBLIC coreclrpal)
+target_link_libraries(hello PUBLIC Library coreclrpal)
