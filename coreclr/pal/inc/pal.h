@@ -186,11 +186,18 @@ extern bool g_arm64_atomics_present;
 
 #if __GNUC__
 
+#if defined(USE_STD_LIBRARY)
+#ifdef __cplusplus
+#include <cstdarg>
+#else
+#include <stdarg.h>
+#endif
+#else
 typedef __builtin_va_list va_list;
 
 /* We should consider if the va_arg definition here is actually necessary.
    Could we use the standard va_arg definition? */
-#ifndef va_start
+
 #define va_start    __builtin_va_start
 #define va_arg      __builtin_va_arg
 
@@ -234,37 +241,28 @@ typedef char * va_list;
 
 #endif // __GNUC__
 
-#undef CHAR_BIT // willing
+#if defined(USE_STD_LIBRARY)
+#include <limits.h>
+#else
 #define CHAR_BIT      8
 
-#undef SCHAR_MIN // willing
 #define SCHAR_MIN   (-128)
-#undef SCHAR_MAX // willing
 #define SCHAR_MAX     127
-#undef UCHAR_MAX // willing
 #define UCHAR_MAX     0xff
 
-#undef SHRT_MIN // willing
 #define SHRT_MIN    (-32768)
-#undef SHRT_MAX // willing
 #define SHRT_MAX      32767
-#undef USHRT_MAX // willing
 #define USHRT_MAX     0xffff
 
-#undef INT_MIN // willing
 #define INT_MIN     (-2147483647 - 1)
-#undef INT_MAX // willing
 #define INT_MAX       2147483647
-#undef UINT_MAX // willing
 #define UINT_MAX      0xffffffff
 
 // LONG_MIN, LONG_MAX, ULONG_MAX -- use INT32_MIN etc. instead.
 
-#undef FLT_MAX // willing
 #define FLT_MAX 3.402823466e+38F
-#undef DBL_MAX // willing
 #define DBL_MAX 1.7976931348623157e+308
-
+#endif
 #endif // !PAL_STDCPP_COMPAT
 
 /******************* PAL-Specific Entrypoints *****************************/
@@ -4096,7 +4094,7 @@ typedef unsigned int wint_t;
 #endif
 
 #ifndef PAL_STDCPP_COMPAT
-#ifndef __CORRECT_ISO_CPP_STRING_H_PROTO
+#if !defined(USE_STD_LIBRARY)
 PALIMPORT void * __cdecl memcpy(void *, const void *, size_t);
 PALIMPORT int    __cdecl memcmp(const void *, const void *, size_t);
 PALIMPORT void * __cdecl memset(void *, int, size_t);
@@ -4137,7 +4135,9 @@ PALIMPORT int __cdecl iswspace(wint_t);
 PALIMPORT int __cdecl iswxdigit(wint_t);
 PALIMPORT wint_t __cdecl towupper(wint_t);
 PALIMPORT wint_t __cdecl towlower(wint_t);
+#if 0 // PAL_functions are defined standard library functions
 PALIMPORT int remove(const char*);
+#endif
 #endif
 #endif // PAL_STDCPP_COMPAT
 
@@ -4314,10 +4314,13 @@ PALIMPORT float __cdecl truncf(float);
 
 #ifdef __cplusplus
 extern "C++" {
-#ifdef __CORRECT_ISO_CPP_STDLIB_H_PROTO
+
+#if !defined(USE_STD_LIBRARY)
+#ifndef _GLIBCXX_BITS_STD_ABS_H
 inline __int64 abs(__int64 _X) {
     return llabs(_X);
 }
+#endif
 #endif
 
 #ifdef __APPLE__
@@ -4340,10 +4343,16 @@ PALIMPORT char * __cdecl _strdup(const char *);
 #define _alloca alloca
 #endif //_MSC_VER
 
-#ifndef alloca // willing
+#if defined(USE_STD_LIBRARY)
+#ifdef __cplusplus
+#include <cstdlib>
+#else
+#include <stdlib.h>
+#endif
+#else
+#undef alloca
 #define alloca  __builtin_alloca
 #endif
-
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
@@ -4373,33 +4382,27 @@ typedef struct _PAL_FILE PAL_FILE;
 
 #else // PAL_STDCPP_COMPAT
 
+#ifndef __FILE_defined
 struct _FILE;
-#ifndef __FILE_defined // willing
 typedef struct _FILE FILE;
-#endif
 typedef struct _FILE PAL_FILE;
+#else
+typedef FILE PAL_FILE;
+#endif
 
 #define SEEK_SET    0
 #define SEEK_CUR    1
 #define SEEK_END    2
 
+#if defined(USE_STD_LIBRARY)
+#include <locale.h>
+#else
 /* Locale categories */
-#ifndef LC_ALL // willing
 #define LC_ALL          0
-#endif
-#ifndef LC_COLLATE // willing
 #define LC_COLLATE      1
-#endif
-#ifndef LC_CTYPE // willing
 #define LC_CTYPE        2
-#endif
-#ifndef LC_MONETARY // willing
 #define LC_MONETARY     3
-#endif
-#ifndef LC_NUMERIC // willing
 #define LC_NUMERIC      4
-#endif
-#ifndef LC_TIME // willing
 #define LC_TIME         5
 #endif
 
@@ -4408,6 +4411,21 @@ typedef struct _FILE PAL_FILE;
 #define _IONBF  2       /* setvbuf should set unbuffered */
 
 #endif // PAL_STDCPP_COMPAT
+
+#if 1 // PAL_functions are defined standard library functions
+#undef PAL_fclose
+#undef PAL_fflush
+#undef PAL_fwrite
+#undef PAL_fread
+#undef PAL_fgets
+#undef PAL_fputs
+#undef PAL_fprintf
+#undef PAL_vfprintf
+#undef PAL_fseek
+#undef PAL_ftell
+#undef PAL_ferror
+#undef PAL_fopen
+#undef PAL_setvbuf
 
 PALIMPORT int __cdecl PAL_fclose(PAL_FILE *);
 PALIMPORT DLLEXPORT int __cdecl PAL_fflush(PAL_FILE *);
@@ -4422,13 +4440,15 @@ PALIMPORT LONG __cdecl PAL_ftell(PAL_FILE *);
 PALIMPORT int __cdecl PAL_ferror(PAL_FILE *);
 PALIMPORT PAL_FILE * __cdecl PAL_fopen(const char *, const char *);
 PALIMPORT int __cdecl PAL_setvbuf(PAL_FILE *stream, char *, int, size_t);
+#endif
 
 PALIMPORT PAL_FILE * __cdecl _wfopen(const WCHAR *, const WCHAR *);
 
 /* Maximum value that can be returned by the rand function. */
 
 #ifndef PAL_STDCPP_COMPAT
-#ifndef RAND_MAX
+#if !defined(USE_STD_LIBRARY)
+#undef RAND_MAX
 #define RAND_MAX 0x7fff
 #endif
 #endif // !PAL_STDCPP_COMPAT
@@ -4453,21 +4473,21 @@ PALIMPORT DLLEXPORT int * __cdecl PAL_errno(int caller);
 #define PAL_stderr (PAL_get_stderr(PAL_get_caller))
 #define PAL_errno   (*PAL_errno(PAL_get_caller))
 #else // PAL_STDCPP_COMPAT
-#ifndef stdout
+#if !defined(USE_STD_LIBRARY)
+#undef stdout
 #define stdout (PAL_get_stdout(PAL_get_caller))
-#endif
-#ifndef stdin
+#undef stdin
 #define stdin  (PAL_get_stdin(PAL_get_caller))
-#endif
-#ifndef stderr
+#undef stderr
 #define stderr (PAL_get_stderr(PAL_get_caller))
-#endif
-#ifndef errno
+#undef errno
 #define errno  (*PAL_errno(PAL_get_caller))
 #endif
 #endif // PAL_STDCPP_COMPAT
 
+// #undef getenv
 PALIMPORT DLLEXPORT char * __cdecl getenv(const char *);
+// #undef putenv
 PALIMPORT DLLEXPORT int __cdecl _putenv(const char *);
 
 #define ERANGE          34
