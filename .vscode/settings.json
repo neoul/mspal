@@ -5,6 +5,10 @@
     "climits": "cpp",
     "ratio": "cpp",
     "regex": "cpp",
-    "cstring": "cpp"
+    "cstring": "cpp",
+    "chrono": "cpp",
+    "random": "cpp",
+    "limits": "cpp",
+    "algorithm": "cpp"
   }
 }

@@ -24,6 +24,9 @@ Revision History:
 
 #include "objidl.h"
 
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+
 class MemoryStream : public IStream
 {
     LONG m_cRef; // QI refcount
@@ -231,10 +234,17 @@ public:
     HRESULT STDMETHODCALLTYPE SetSize(
         ULARGE_INTEGER libNewSize)
     {
+#ifndef PAL_STDCPP_COMPAT
         if (libNewSize.u.HighPart != 0)
             return STG_E_INVALIDFUNCTION;
 
         m_nSize = libNewSize.u.LowPart;
+#else
+        if (libNewSize.HighPart != 0)
+            return STG_E_INVALIDFUNCTION;
+
+        m_nSize = libNewSize.LowPart;
+#endif
 
         // free the space if we are shrinking
         if (m_nSize < m_nData)
