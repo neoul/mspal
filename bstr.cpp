@@ -22,7 +22,7 @@
 #include <math.h>
 #include <palrt.h>
 
-// #include <comdef.h>
+#include <comdef.h>
 
 // namespace _com_util {
 //   inline void CheckError(HRESULT hr) {

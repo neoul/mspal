@@ -26,7 +26,7 @@ Abstract:
 
 #ifdef __cplusplus
 typedef char16_t wchar_16; // __wchar_16 (which is defined in palinternal.h) is defined as wchar_16_cpp.
-typedef wchar_t WCHAR; // __wchar_16 (which is defined in palinternal.h) is defined as wchar_16_cpp.
+typedef wchar_t WCHAR;
 
 extern "C"
 {

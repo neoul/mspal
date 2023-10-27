@@ -102,7 +102,7 @@ CreateEventW(
     PERF_ENTRY(CreateEventW);
     ENTRY("CreateEventW(lpEventAttr=%p, bManualReset=%d, "
           "bInitialState=%d, lpName=%p (%S)\n", lpEventAttributes, bManualReset,
-           bInitialState, lpName, lpName?lpName:W16_NULLSTRING);
+           bInitialState, lpName, lpName?lpName:W_NULLSTRING);
 
     pthr = InternalGetCurrentThread();
 
@@ -448,7 +448,7 @@ OpenEventW(
 
     PERF_ENTRY(OpenEventW);
     ENTRY("OpenEventW(dwDesiredAccess=%#x, bInheritHandle=%d, lpName=%p (%S))\n",
-          dwDesiredAccess, bInheritHandle, lpName, lpName?lpName:W16_NULLSTRING);
+          dwDesiredAccess, bInheritHandle, lpName, lpName?lpName:W_NULLSTRING);
 
     pthr = InternalGetCurrentThread();
 

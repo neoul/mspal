@@ -139,7 +139,7 @@ PAL_CreateMutexW(
     ENTRY("PAL_CreateMutexW(bInitialOwner=%d, lpName=%p (%S), lpSystemCallErrors=%p, dwSystemCallErrorsBufferSize=%d\n",
           bInitialOwner,
           lpName,
-          lpName?lpName:W16_NULLSTRING,
+          lpName?lpName:W_NULLSTRING,
           lpSystemCallErrors,
           dwSystemCallErrorsBufferSize);
 
@@ -618,7 +618,7 @@ PAL_OpenMutexW(
     PERF_ENTRY(PAL_OpenMutexW);
     ENTRY("PAL_OpenMutexW(lpName=%p (%S), lpSystemCallErrors=%p, dwSystemCallErrorsBufferSize=%d)\n",
           lpName,
-          lpName?lpName:W16_NULLSTRING,
+          lpName?lpName:W_NULLSTRING,
           lpSystemCallErrors,
           dwSystemCallErrorsBufferSize);
 

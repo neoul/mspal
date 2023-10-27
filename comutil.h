@@ -44,6 +44,30 @@ void WINAPI _com_issue_error(HRESULT);
 class _bstr_t;
 class _variant_t;
 
+BSTR SysAllocString(const OLECHAR *psz)
+{
+  if (psz == nullptr)
+    return nullptr;
+
+  size_t len = PAL_wcslen(psz); // Calculate the length of the input string, including the null terminator
+  size_t total = len + sizeof(unsigned int);
+  unsigned int *destination = (unsigned int *)malloc(total); // Allocate memory for the new wide string
+  if (destination)
+  {
+    destination[0] = len; // Store the length of the string in the first 4 bytes
+    destination++;        // Move the pointer forward by 4 bytes
+    WCHAR *wc = (WCHAR *)destination;
+    PAL_wcscpy(wc, psz); // Copy the input string to the allocated memory
+  }
+  return (BSTR)destination;
+}
+
+void SysFreeString(OLECHAR *bstr)
+{
+  if (bstr != nullptr)
+    free(bstr); // Free the memory occupied by the BSTR
+}
+
 namespace _com_util
 {
 
@@ -54,34 +78,35 @@ namespace _com_util
       _com_issue_error(hr);
     }
   }
-  
+
   BSTR ConvertStringToBSTR(const char *pSrc)
   {
-    if (pSrc == NULL)
-      return NULL;
+    if (pSrc == nullptr)
+      return nullptr;
 
     // Determine the required size for the BSTR
-    size_t len = mbstowcs(NULL, pSrc, 0);
+    size_t len = mbstowcs(nullptr, pSrc, 0);
     if (len == (size_t)-1)
-      return NULL; // Conversion error
+      return nullptr; // Conversion error
 
     // Allocate memory for the BSTR
     BSTR bstr = (BSTR)malloc((len + 1) * sizeof(wchar_t));
-    if (bstr == NULL)
-      return NULL; // Memory allocation failed
+    if (bstr == nullptr)
+      return nullptr; // Memory allocation failed
 
     // Convert the input string to wide characters
     if (mbstowcs(bstr, pSrc, len + 1) == (size_t)-1)
     {
       free(bstr);
-      return NULL; // Conversion error
+      return nullptr; // Conversion error
     }
     return bstr;
   }
+
   char *WINAPI ConvertBSTRToString(BSTR pSrc)
   {
-    if (pSrc == NULL)
-      return NULL;
+    if (pSrc == nullptr)
+      return nullptr;
     char *bstr = (char *)pSrc;
     // The first 4 bytes of a BSTR contain the length (in bytes) of the string.
     unsigned int len = *(unsigned int *)bstr;
@@ -89,7 +114,7 @@ namespace _com_util
     // Allocate memory for the C-style string (plus one for the null-terminator).
     char *result = (char *)malloc(len + 1);
 
-    if (result != NULL)
+    if (result != nullptr)
     {
       // Copy the characters from the BSTR to the C-style string.
       strncpy(result, bstr + 4, len);

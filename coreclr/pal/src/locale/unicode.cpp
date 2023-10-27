@@ -309,7 +309,7 @@ WideCharToMultiByte(
     ENTRY("WideCharToMultiByte(CodePage=%u, dwFlags=%#x, lpWideCharStr=%p (%S), "
           "cchWideChar=%d, lpMultiByteStr=%p, cbMultiByte=%d, "
           "lpDefaultChar=%p, lpUsedDefaultChar=%p)\n",
-          CodePage, dwFlags, lpWideCharStr?lpWideCharStr:W16_NULLSTRING, lpWideCharStr?lpWideCharStr:W16_NULLSTRING,
+          CodePage, dwFlags, lpWideCharStr?lpWideCharStr:W_NULLSTRING, lpWideCharStr?lpWideCharStr:W_NULLSTRING,
           cchWideChar, lpMultiByteStr, cbMultiByte,
           lpDefaultChar, lpUsedDefaultChar);
 

@@ -56,8 +56,8 @@ CreateDirectoryW(
 
     PERF_ENTRY(CreateDirectoryW);
     ENTRY("CreateDirectoryW(lpPathName=%p (%S), lpSecurityAttr=%p)\n",
-          lpPathName?lpPathName:W16_NULLSTRING,
-          lpPathName?lpPathName:W16_NULLSTRING, lpSecurityAttributes);
+          lpPathName?lpPathName:W_NULLSTRING,
+          lpPathName?lpPathName:W_NULLSTRING, lpSecurityAttributes);
 
     if ( lpSecurityAttributes )
     {
@@ -191,8 +191,8 @@ RemoveDirectoryW(
 
     PERF_ENTRY(RemoveDirectoryW);
     ENTRY("RemoveDirectoryW(lpPathName=%p (%S))\n",
-          lpPathName?lpPathName:W16_NULLSTRING,
-          lpPathName?lpPathName:W16_NULLSTRING);
+          lpPathName?lpPathName:W_NULLSTRING,
+          lpPathName?lpPathName:W_NULLSTRING);
 
     if (lpPathName == NULL)
     {
@@ -313,8 +313,8 @@ SetCurrentDirectoryW(
 
     PERF_ENTRY(SetCurrentDirectoryW);
     ENTRY("SetCurrentDirectoryW(lpPathName=%p (%S))\n",
-          lpPathName?lpPathName:W16_NULLSTRING,
-          lpPathName?lpPathName:W16_NULLSTRING);
+          lpPathName?lpPathName:W_NULLSTRING,
+          lpPathName?lpPathName:W_NULLSTRING);
 
    /*check if the given path is null. If so
      return FALSE*/

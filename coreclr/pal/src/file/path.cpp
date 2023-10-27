@@ -184,8 +184,8 @@ GetFullPathNameW(
     PERF_ENTRY(GetFullPathNameW);
     ENTRY("GetFullPathNameW(lpFileName=%p (%S), nBufferLength=%u, lpBuffer=%p"
           ", lpFilePart=%p)\n",
-          lpFileName?lpFileName:W16_NULLSTRING,
-          lpFileName?lpFileName:W16_NULLSTRING, nBufferLength,
+          lpFileName?lpFileName:W_NULLSTRING,
+          lpFileName?lpFileName:W_NULLSTRING, nBufferLength,
           lpBuffer, lpFilePart);
 
 

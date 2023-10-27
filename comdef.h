@@ -8,7 +8,7 @@
 
 // #include <_mingw.h>
 #include <wintypes.h>
-#include <palrt.h>
+
 
 #ifndef RC_INVOKED
 
@@ -174,14 +174,14 @@ inline void WINAPI _com_raise_error(HRESULT hr, IErrorInfo *perrinfo = 0) {
 #endif
 }
 
-__MINGW_SELECTANY void (WINAPI *__mingw_com_error_handler)(HRESULT hr,IErrorInfo *perrinfo) = _com_raise_error;
+void (WINAPI *__com_error_handler)(HRESULT hr,IErrorInfo *perrinfo) = _com_raise_error;
 
 inline void WINAPI _set_com_error_handler(void (WINAPI *pHandler)(HRESULT hr,IErrorInfo *perrinfo)) {
-  __mingw_com_error_handler = pHandler;
+  __com_error_handler = pHandler;
 }
 
 inline void WINAPI _com_issue_error(HRESULT hr) {
-  __mingw_com_error_handler(hr, NULL);
+  __com_error_handler(hr, NULL);
 }
 
 

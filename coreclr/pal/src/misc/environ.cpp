@@ -171,8 +171,8 @@ GetEnvironmentVariableW(
 
     PERF_ENTRY(GetEnvironmentVariableW);
     ENTRY("GetEnvironmentVariableW(lpName=%p (%S), lpBuffer=%p, nSize=%u)\n",
-          lpName ? lpName : W16_NULLSTRING,
-          lpName ? lpName : W16_NULLSTRING, lpBuffer, nSize);
+          lpName ? lpName : W_NULLSTRING,
+          lpName ? lpName : W_NULLSTRING, lpBuffer, nSize);
 
     inBuffSize = WideCharToMultiByte(CP_ACP, 0, lpName, -1,
                                      inBuff, 0, nullptr, nullptr);
@@ -299,8 +299,8 @@ SetEnvironmentVariableW(
 
     PERF_ENTRY(SetEnvironmentVariableW);
     ENTRY("SetEnvironmentVariableW(lpName=%p (%S), lpValue=%p (%S))\n",
-        lpName?lpName:W16_NULLSTRING,
-        lpName?lpName:W16_NULLSTRING, lpValue?lpValue:W16_NULLSTRING, lpValue?lpValue:W16_NULLSTRING);
+        lpName?lpName:W_NULLSTRING,
+        lpName?lpName:W_NULLSTRING, lpValue?lpValue:W_NULLSTRING, lpValue?lpValue:W_NULLSTRING);
 
     if ((nameSize = WideCharToMultiByte(CP_ACP, 0, lpName, -1, name, 0,
                                         nullptr, nullptr)) == 0)
@@ -472,7 +472,7 @@ FreeEnvironmentStringsW(
             IN LPWSTR lpValue)
 {
     PERF_ENTRY(FreeEnvironmentStringsW);
-    ENTRY("FreeEnvironmentStringsW(lpValue=%p (%S))\n", lpValue ? lpValue : W16_NULLSTRING, lpValue ? lpValue : W16_NULLSTRING);
+    ENTRY("FreeEnvironmentStringsW(lpValue=%p (%S))\n", lpValue ? lpValue : W_NULLSTRING, lpValue ? lpValue : W_NULLSTRING);
 
     if (lpValue != nullptr)
     {

@@ -845,8 +845,8 @@ CreateFileW(
     PERF_ENTRY(CreateFileW);
     ENTRY("CreateFileW(lpFileName=%p (%S), dwAccess=%#x, dwShareMode=%#x, "
           "lpSecurityAttr=%p, dwDisposition=%#x, dwFlags=%#x, hTemplateFile=%p )\n",
-          lpFileName?lpFileName:W16_NULLSTRING,
-          lpFileName?lpFileName:W16_NULLSTRING, dwDesiredAccess, dwShareMode,
+          lpFileName?lpFileName:W_NULLSTRING,
+          lpFileName?lpFileName:W_NULLSTRING, dwDesiredAccess, dwShareMode,
           lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes,
           hTemplateFile);
 
@@ -933,10 +933,10 @@ CopyFileW(
 
     PERF_ENTRY(CopyFileW);
     ENTRY("CopyFileW(lpExistingFileName=%p (%S), lpNewFileName=%p (%S), bFailIfExists=%d)\n",
-          lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
-          lpExistingFileName?lpExistingFileName:W16_NULLSTRING,
-          lpNewFileName?lpNewFileName:W16_NULLSTRING,
-          lpNewFileName?lpNewFileName:W16_NULLSTRING, bFailIfExists);
+          lpExistingFileName?lpExistingFileName:W_NULLSTRING,
+          lpExistingFileName?lpExistingFileName:W_NULLSTRING,
+          lpNewFileName?lpNewFileName:W_NULLSTRING,
+          lpNewFileName?lpNewFileName:W_NULLSTRING, bFailIfExists);
 
     pThread = InternalGetCurrentThread();
     if (lpExistingFileName != NULL)
@@ -1177,8 +1177,8 @@ GetFileAttributesW(
 
     PERF_ENTRY(GetFileAttributesW);
     ENTRY("GetFileAttributesW(lpFileName=%p (%S))\n",
-          lpFileName?lpFileName:W16_NULLSTRING,
-          lpFileName?lpFileName:W16_NULLSTRING);
+          lpFileName?lpFileName:W_NULLSTRING,
+          lpFileName?lpFileName:W_NULLSTRING);
 
     pThread = InternalGetCurrentThread();
     if (lpFileName == NULL)
@@ -1244,7 +1244,7 @@ GetFileAttributesExW(
 
     PERF_ENTRY(GetFileAttributesExW);
     ENTRY("GetFileAttributesExW(lpFileName=%p (%S), fInfoLevelId=%d, "
-          "lpFileInformation=%p)\n", lpFileName?lpFileName:W16_NULLSTRING, lpFileName?lpFileName:W16_NULLSTRING,
+          "lpFileInformation=%p)\n", lpFileName?lpFileName:W_NULLSTRING, lpFileName?lpFileName:W_NULLSTRING,
           fInfoLevelId, lpFileInformation);
 
     pThread = InternalGetCurrentThread();
@@ -1490,8 +1490,8 @@ SetFileAttributesW(
 
     PERF_ENTRY(SetFileAttributesW);
     ENTRY("SetFileAttributesW(lpFileName=%p (%S), dwFileAttributes=%#x)\n",
-        lpFileName?lpFileName:W16_NULLSTRING,
-        lpFileName?lpFileName:W16_NULLSTRING, dwFileAttributes);
+        lpFileName?lpFileName:W_NULLSTRING,
+        lpFileName?lpFileName:W_NULLSTRING, dwFileAttributes);
 
     pThread = InternalGetCurrentThread();
     if (lpFileName == NULL)
@@ -2772,9 +2772,9 @@ GetTempFileNameW(
 
     PERF_ENTRY(GetTempFileNameW);
     ENTRY("GetTempFileNameW(lpPathName=%p (%S), lpPrefixString=%p (%S), uUnique=%u, "
-          "lpTempFileName=%p)\n", lpPathName?lpPathName:W16_NULLSTRING, lpPathName?lpPathName:W16_NULLSTRING,
-          lpPrefixString?lpPrefixString:W16_NULLSTRING,
-          lpPrefixString?lpPrefixString:W16_NULLSTRING,uUnique, lpTempFileName);
+          "lpTempFileName=%p)\n", lpPathName?lpPathName:W_NULLSTRING, lpPathName?lpPathName:W_NULLSTRING,
+          lpPrefixString?lpPrefixString:W_NULLSTRING,
+          lpPrefixString?lpPrefixString:W_NULLSTRING,uUnique, lpTempFileName);
 
     pThread = InternalGetCurrentThread();
     /* Sanity checks. */

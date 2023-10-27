@@ -126,8 +126,8 @@ _wcsnicmp(
 
     PERF_ENTRY(_wcsnicmp);
     ENTRY("_wcsnicmp (string1=%p (%S), string2=%p (%S), count=%lu)\n",
-          string1?string1:W16_NULLSTRING,
-          string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING,
+          string1?string1:W_NULLSTRING,
+          string1?string1:W_NULLSTRING, string2?string2:W_NULLSTRING, string2?string2:W_NULLSTRING,
          (unsigned long) count);
 
     for (i = 0; i < count; i++)
@@ -176,8 +176,8 @@ _wcsicmp(
 
     PERF_ENTRY(_wcsicmp);
     ENTRY("_wcsicmp (string1=%p (%S), string2=%p (%S))\n",
-          string1?string1:W16_NULLSTRING,
-          string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING);
+          string1?string1:W_NULLSTRING,
+          string1?string1:W_NULLSTRING, string2?string2:W_NULLSTRING, string2?string2:W_NULLSTRING);
 
     ret = _wcsnicmp(string1, string2, 0x7fffffff);
 
@@ -249,7 +249,7 @@ PAL_wcstoul(
     DWORD dwLastError = 0;
 
     PERF_ENTRY(wcstoul);
-    ENTRY("wcstoul (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
+    ENTRY("wcstoul (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W_NULLSTRING, nptr?nptr:W_NULLSTRING,
           endptr, base);
 
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL, NULL);
@@ -339,7 +339,7 @@ PAL__wcstoui64(
     DWORD dwLastError = 0;
 
     PERF_ENTRY(wcstoul);
-    ENTRY("_wcstoui64 (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
+    ENTRY("_wcstoui64 (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W_NULLSTRING, nptr?nptr:W_NULLSTRING,
           endptr, base);
 
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL, NULL);
@@ -406,8 +406,8 @@ PAL_wcscat(
     WCHAR *ret;
     PERF_ENTRY(wcscat);
     ENTRY("wcscat (strDestination=%p (%S), strSource=%p (%S))\n",
-          strDestination?strDestination:W16_NULLSTRING,
-          strDestination?strDestination:W16_NULLSTRING, strSource?strSource:W16_NULLSTRING, strSource?strSource:W16_NULLSTRING);
+          strDestination?strDestination:W_NULLSTRING,
+          strDestination?strDestination:W_NULLSTRING, strSource?strSource:W_NULLSTRING, strSource?strSource:W_NULLSTRING);
 
     ret = PAL_wcsncat( strDestination, strSource, PAL_wcslen( strSource ) );
 
@@ -434,7 +434,7 @@ PAL_wcscpy(
 
     PERF_ENTRY(wcscpy);
     ENTRY("wcscpy (strDestination=%p, strSource=%p (%S))\n",
-          strDestination, strSource ? strSource:W16_NULLSTRING, strSource ? strSource:W16_NULLSTRING);
+          strDestination, strSource ? strSource:W_NULLSTRING, strSource ? strSource:W_NULLSTRING);
 
     if (strDestination == NULL)
     {
@@ -482,7 +482,7 @@ PAL_wcslen(
     size_t nChar = 0;
 
     PERF_ENTRY(wcslen);
-    ENTRY("wcslen (string=%p (%S))\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
+    ENTRY("wcslen (string=%p (%S))\n", string?string:W_NULLSTRING, string?string:W_NULLSTRING);
 
     if ( !string )
     {
@@ -519,8 +519,8 @@ PAL_wcsncmp(
 
     PERF_ENTRY(wcsncmp);
     ENTRY("wcsncmp (string1=%p (%S), string2=%p (%S) count=%lu)\n",
-          string1?string1:W16_NULLSTRING,
-          string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING,
+          string1?string1:W_NULLSTRING,
+          string1?string1:W_NULLSTRING, string2?string2:W_NULLSTRING, string2?string2:W_NULLSTRING,
           (unsigned long) count);
 
     for (i = 0; i < count; i++)
@@ -558,8 +558,8 @@ PAL_wcscmp(
 
     PERF_ENTRY(wcscmp);
     ENTRY("wcscmp (string1=%p (%S), string2=%p (%S))\n",
-          string1?string1:W16_NULLSTRING,
-          string1?string1:W16_NULLSTRING, string2?string2:W16_NULLSTRING, string2?string2:W16_NULLSTRING);
+          string1?string1:W_NULLSTRING,
+          string1?string1:W_NULLSTRING, string2?string2:W_NULLSTRING, string2?string2:W_NULLSTRING);
 
     ret = PAL_wcsncmp(string1, string2, 0x7fffffff);
 
@@ -582,7 +582,7 @@ PAL_wcschr(
         WCHAR c)
 {
     PERF_ENTRY(wcschr);
-    ENTRY("wcschr (string=%p (%S), c=%C)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING, c);
+    ENTRY("wcschr (string=%p (%S), c=%C)\n", string?string:W_NULLSTRING, string?string:W_NULLSTRING, c);
 
     while (*string)
     {
@@ -621,7 +621,7 @@ PAL_wcsrchr(
     WCHAR *last = NULL;
 
     PERF_ENTRY(wcsrchr);
-    ENTRY("wcsrchr (string=%p (%S), c=%C)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING, c);
+    ENTRY("wcsrchr (string=%p (%S), c=%C)\n", string?string:W_NULLSTRING, string?string:W_NULLSTRING, c);
 
     while (*string)
     {
@@ -632,7 +632,7 @@ PAL_wcsrchr(
         string++;
     }
 
-    LOGEXIT("wcsrchr returning wchar_t %p (%S)\n", last?last:W16_NULLSTRING, last?last:W16_NULLSTRING);
+    LOGEXIT("wcsrchr returning wchar_t %p (%S)\n", last?last:W_NULLSTRING, last?last:W_NULLSTRING);
     PERF_EXIT(wcsrchr);
     return (WCHAR *)last;
 }
@@ -652,8 +652,8 @@ PAL_wcspbrk(
 {
     PERF_ENTRY(wcspbrk);
     ENTRY("wcspbrk (string=%p (%S), strCharSet=%p (%S))\n",
-          string?string:W16_NULLSTRING,
-          string?string:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING);
+          string?string:W_NULLSTRING,
+          string?string:W_NULLSTRING, strCharSet?strCharSet:W_NULLSTRING, strCharSet?strCharSet:W_NULLSTRING);
 
     while (*string)
     {
@@ -690,8 +690,8 @@ PAL_wcsstr(
 
     PERF_ENTRY(wcsstr);
     ENTRY("wcsstr (string=%p (%S), strCharSet=%p (%S))\n",
-      string?string:W16_NULLSTRING,
-      string?string:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING, strCharSet?strCharSet:W16_NULLSTRING);
+      string?string:W_NULLSTRING,
+      string?string:W_NULLSTRING, strCharSet?strCharSet:W_NULLSTRING, strCharSet?strCharSet:W_NULLSTRING);
 
     if (string == NULL)
     {
@@ -737,7 +737,7 @@ PAL_wcsstr(
     }
 
  leave:
-    LOGEXIT("wcsstr returning wchar_t %p (%S)\n", ret?ret:W16_NULLSTRING, ret?ret:W16_NULLSTRING);
+    LOGEXIT("wcsstr returning wchar_t %p (%S)\n", ret?ret:W_NULLSTRING, ret?ret:W_NULLSTRING);
     PERF_EXIT(wcsstr);
     return ret;
 }
@@ -784,10 +784,10 @@ PAL_wcsncat( WCHAR * strDest, const WCHAR *strSource, size_t count )
 
     PERF_ENTRY(wcsncat);
     ENTRY( "wcsncat (strDestination=%p (%S), strSource=%p (%S), count=%lu )\n",
-            strDest ? strDest : W16_NULLSTRING,
-            strDest ? strDest : W16_NULLSTRING,
-            strSource ? strSource : W16_NULLSTRING,
-            strSource ? strSource : W16_NULLSTRING, (unsigned long) count);
+            strDest ? strDest : W_NULLSTRING,
+            strDest ? strDest : W_NULLSTRING,
+            strSource ? strSource : W_NULLSTRING,
+            strSource ? strSource : W_NULLSTRING, (unsigned long) count);
 
     if ( strDest == NULL )
     {

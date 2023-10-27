@@ -184,8 +184,8 @@ OutputDebugStringW(
 
     PERF_ENTRY(OutputDebugStringW);
     ENTRY("OutputDebugStringW (lpOutputString=%p (%S))\n",
-          lpOutputString ? lpOutputString: W16_NULLSTRING,
-          lpOutputString ? lpOutputString: W16_NULLSTRING);
+          lpOutputString ? lpOutputString: W_NULLSTRING,
+          lpOutputString ? lpOutputString: W_NULLSTRING);
 
     if (lpOutputString == NULL)
     {

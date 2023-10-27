@@ -333,7 +333,7 @@ CreateFileMappingW(
     ENTRY("CreateFileMappingW(hFile=%p, lpAttributes=%p, flProtect=%#x, "
           "dwMaxSizeH=%u, dwMaxSizeL=%u, lpName=%p (%S))\n",
           hFile, lpFileMappingAttributes, flProtect, dwMaximumSizeHigh,
-          dwMaximumSizeLow, lpName?lpName:W16_NULLSTRING, lpName?lpName:W16_NULLSTRING);
+          dwMaximumSizeLow, lpName?lpName:W_NULLSTRING, lpName?lpName:W_NULLSTRING);
 
     pThread = InternalGetCurrentThread();
 

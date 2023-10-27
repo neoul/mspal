@@ -54,8 +54,7 @@ static const char FOPEN_FLAGS[] = "at";
 #define DBG_BUFFER_SIZE 20000
 
 /* global and static variables */
-
-LPCWSTR W16_NULLSTRING = (LPCWSTR) "N\0U\0L\0L\0\0";
+LPCWSTR W_NULLSTRING = (LPCWSTR) "N\0U\0L\0L\0\0";
 
 DWORD dbg_channel_flags[DCI_LAST];
 BOOL g_Dbg_asserts_enabled;

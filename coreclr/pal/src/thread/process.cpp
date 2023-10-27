@@ -411,13 +411,13 @@ CreateProcessW(
     ENTRY("CreateProcessW(lpAppName=%p (%S), lpCmdLine=%p (%S), lpProcessAttr=%p,"
            "lpThreadAttr=%p, bInherit=%d, dwFlags=%#x, lpEnv=%p,"
            "lpCurrentDir=%p (%S), lpStartupInfo=%p, lpProcessInfo=%p)\n",
-           lpApplicationName?lpApplicationName:W16_NULLSTRING,
-           lpApplicationName?lpApplicationName:W16_NULLSTRING,
-           lpCommandLine?lpCommandLine:W16_NULLSTRING,
-           lpCommandLine?lpCommandLine:W16_NULLSTRING,lpProcessAttributes,
+           lpApplicationName?lpApplicationName:W_NULLSTRING,
+           lpApplicationName?lpApplicationName:W_NULLSTRING,
+           lpCommandLine?lpCommandLine:W_NULLSTRING,
+           lpCommandLine?lpCommandLine:W_NULLSTRING,lpProcessAttributes,
            lpThreadAttributes, bInheritHandles, dwCreationFlags,lpEnvironment,
-           lpCurrentDirectory?lpCurrentDirectory:W16_NULLSTRING,
-           lpCurrentDirectory?lpCurrentDirectory:W16_NULLSTRING,
+           lpCurrentDirectory?lpCurrentDirectory:W_NULLSTRING,
+           lpCurrentDirectory?lpCurrentDirectory:W_NULLSTRING,
            lpStartupInfo, lpProcessInformation);
 
     pThread = InternalGetCurrentThread();

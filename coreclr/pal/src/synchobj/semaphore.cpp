@@ -79,7 +79,7 @@ HANDLE CreateSemaphoreW(
     ENTRY("CreateSemaphoreW(lpSemaphoreAttributes=%p, lInitialCount=%d, "
           "lMaximumCount=%d, lpName=%p (%S))\n",
           lpSemaphoreAttributes, lInitialCount, lMaximumCount,
-          lpName, lpName?lpName:W16_NULLSTRING);
+          lpName, lpName?lpName:W_NULLSTRING);
 
     pthr = InternalGetCurrentThread();
 
@@ -468,7 +468,7 @@ OpenSemaphoreW(
 
     PERF_ENTRY(OpenSemaphoreW);
     ENTRY("OpenSemaphoreW(dwDesiredAccess=%#x, bInheritHandle=%d, lpName=%p (%S))\n",
-          dwDesiredAccess, bInheritHandle, lpName, lpName?lpName:W16_NULLSTRING);
+          dwDesiredAccess, bInheritHandle, lpName, lpName?lpName:W_NULLSTRING);
 
     pthr = InternalGetCurrentThread();
 

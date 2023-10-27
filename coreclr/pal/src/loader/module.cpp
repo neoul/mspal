@@ -175,8 +175,8 @@ LoadLibraryExW(
 
     PERF_ENTRY(LoadLibraryExW);
     ENTRY("LoadLibraryExW (lpLibFileName=%p (%S)) \n",
-          lpLibFileName ? lpLibFileName : W16_NULLSTRING,
-          lpLibFileName ? lpLibFileName : W16_NULLSTRING);
+          lpLibFileName ? lpLibFileName : W_NULLSTRING,
+          lpLibFileName ? lpLibFileName : W_NULLSTRING);
 
     if (!LOADVerifyLibraryPath(lpLibFileName))
     {
@@ -535,8 +535,8 @@ PAL_LoadLibraryDirect(
 
     PERF_ENTRY(LoadLibraryDirect);
     ENTRY("LoadLibraryDirect (lpLibFileName=%p (%S)) \n",
-          lpLibFileName ? lpLibFileName : W16_NULLSTRING,
-          lpLibFileName ? lpLibFileName : W16_NULLSTRING);
+          lpLibFileName ? lpLibFileName : W_NULLSTRING,
+          lpLibFileName ? lpLibFileName : W_NULLSTRING);
 
     // Getting nullptr as name indicates redirection to current library
     if (lpLibFileName == nullptr)
@@ -1303,7 +1303,7 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, LPVOID lpRese
     {
         TRACE("Calling DllMain (%p) for module %S\n",
               pParam->module->pDllMain,
-              pParam->module->lib_name ? pParam->module->lib_name : W16_NULLSTRING);
+              pParam->module->lib_name ? pParam->module->lib_name : W_NULLSTRING);
 
         pParam->ret = pParam->module->pDllMain(pParam->module->hinstance, pParam->dwReason, pParam->lpReserved);
     }
@@ -1674,7 +1674,7 @@ static HMODULE LOADRegisterLibraryDirect(NATIVE_LIBRARY_HANDLE dl_handle, LPCSTR
     {
         TRACE("Calling DllMain (%p) for module %S\n",
             module->pDllMain,
-            module->lib_name ? module->lib_name : W16_NULLSTRING);
+            module->lib_name ? module->lib_name : W_NULLSTRING);
 
         if (nullptr == module->hinstance)
         {

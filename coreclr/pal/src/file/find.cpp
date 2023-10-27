@@ -257,8 +257,8 @@ FindFirstFileW(
 
     PERF_ENTRY(FindFirstFileW);
     ENTRY("FindFirstFileW(lpFileName=%p (%S), lpFindFileData=%p)\n",
-          lpFileName?lpFileName:W16_NULLSTRING,
-          lpFileName?lpFileName:W16_NULLSTRING, lpFindFileData);
+          lpFileName?lpFileName:W_NULLSTRING,
+          lpFileName?lpFileName:W_NULLSTRING, lpFindFileData);
 
     if(NULL == lpFileName)
     {
