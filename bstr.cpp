@@ -1,4 +1,27 @@
 #include <iostream>
+
+#include <float.h>
+#include <limits.h>
+#include <math.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <string.h>
+#include <errno.h>
+#include <ctype.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <math.h>
+#include <palrt.h>
+
 // #include <comdef.h>
 
 // namespace _com_util {
@@ -23,10 +46,11 @@
 
 int main()
 {
-    std::cout << sizeof(wchar_t) << std::endl; // 8
+    std::cout << "BSTR" << " " << sizeof(BSTR) << std::endl; // 8
+    std::cout << "wchar_t" << " " << sizeof(wchar_t) << std::endl; // 8
     std::cout << sizeof(long) << std::endl; // 8
     std::cout << sizeof(int) << std::endl; // 4
-    // SYSTEMTIME TheTime;
-    // GetSystemTime(&TheTime);
-    // std::cout << std::string("Hello, CMake world! ") << std::to_string(TheTime.wYear) << std::endl;
+    SYSTEMTIME TheTime;
+    GetSystemTime(&TheTime);
+    std::cout << std::string("Hello, CMake world! ") << std::to_string(TheTime.wYear) << std::endl;
 }

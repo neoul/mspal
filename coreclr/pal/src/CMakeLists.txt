@@ -258,32 +258,6 @@ foreach(dir ${dirs})
   message(STATUS "dir='${dir}'")
 endforeach()
 
-# # Build separate pal library for DAC (addition to regular pal library)
-# if(CLR_CMAKE_TARGET_OSX)
-#   set(LIBUNWIND_DAC_OBJECTS $<TARGET_OBJECTS:libunwind_dac>)
-
-#   add_library(coreclrpal_dac STATIC
-#     exception/remote-unwind.cpp
-#     ${LIBUNWIND_DAC_OBJECTS}
-#   )
-
-#   target_compile_definitions(coreclrpal_dac PUBLIC -DUNW_REMOTE_ONLY)
-# else()
-#   if(NOT FEATURE_CROSSBITNESS)
-#     add_library(coreclrpal_dac STATIC
-#       exception/remote-unwind.cpp
-#     )
-#   endif(NOT FEATURE_CROSSBITNESS)
-# endif(CLR_CMAKE_TARGET_OSX)
-
-# if(NOT FEATURE_CROSSBITNESS)
-#   target_include_directories(coreclrpal_dac PUBLIC
-#     ${CLR_SRC_NATIVE_DIR}/external/libunwind/include
-#     ${CLR_SRC_NATIVE_DIR}/external/libunwind/include/tdep
-#     ${CLR_ARTIFACTS_OBJ_DIR}/external/libunwind/include
-#     ${CLR_ARTIFACTS_OBJ_DIR}/external/libunwind/include/tdep
-#   )
-# endif(NOT FEATURE_CROSSBITNESS)
 
 # There is only one function exported in 'tracepointprovider.cpp' namely 'PAL_InitializeTracing',
 # which is guarded with '#if defined(__linux__)'. On macOS, Xcode issues the following warning:
@@ -378,5 +352,4 @@ endif(CLR_CMAKE_TARGET_SUNOS)
 # endif(FEATURE_EVENT_TRACE)
 
 # # Install the static PAL library for VS
-# # install_clr (TARGETS coreclrpal DESTINATIONS lib)
-# install(TARGETS coreclrpal)
+# install_clr (TARGETS coreclrpal DESTINATIONS lib)

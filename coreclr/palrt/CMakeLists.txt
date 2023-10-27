@@ -1,5 +1,6 @@
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+SET(CMAKE_VERBOSE_MAKEFILE true) # false if you don't want verbose output
 
 set(PALRT_SOURCES
     comem.cpp
@@ -9,7 +10,6 @@ set(PALRT_SOURCES
 )
 
 add_library(palrt
-    STATIC
     ${PALRT_SOURCES}
 )
 
