@@ -57,7 +57,11 @@ extern "C" {
 // Unix L"" is UTF32, and on windows it's UTF16.  Because of built-in assumptions on the size
 // of string literals, it's important to match behaviour between Unix and Windows.  Unix will be defined
 // as u"" (char16_t)
+#if defined(WCHAR_4BYTES)
+#define W(str)  L##str
+#else
 #define W(str)  u##str
+#endif
 
 // Undefine the QUOTE_MACRO_L helper and redefine it in terms of u.
 // The reason that we do this is that quote macro is defined in ndp\common\inc,

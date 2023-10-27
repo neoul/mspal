@@ -74,20 +74,20 @@ typedef struct miniFILE_struct
 #define _IOMYBUF 8
 
 int _putc_nolock( char inChar, miniFILE* inStream );
-int _putwc_nolock( char16_t inChar, miniFILE* inStream );
+int _putwc_nolock( WCHAR inChar, miniFILE* inStream );
 int _getc_nolock( miniFILE* inStream );
 int _getwc_nolock( miniFILE* inStream );
 int _ungetc_nolock( char inChar, miniFILE* inStream );
-int _ungetwc_nolock( char16_t inChar, miniFILE* inStream );
+int _ungetwc_nolock( WCHAR inChar, miniFILE* inStream );
 
 errno_t _safecrt_cfltcvt(double *arg, char *buffer, size_t sizeInBytes, int type, int precision, int flags);
 
 void _safecrt_fassign(int flag, void* argument, char * number );
-void _safecrt_wfassign(int flag, void* argument, char16_t * number );
+void _safecrt_wfassign(int flag, void* argument, WCHAR * number );
 
-int _minimal_chartowchar( char16_t* outWChar, const char* inChar );
+int _minimal_chartowchar( WCHAR* outWChar, const char* inChar );
 
 int __tinput_s( miniFILE* inFile, const unsigned char * inFormat, va_list inArgList );
-int __twinput_s( miniFILE* inFile, const char16_t * inFormat, va_list inArgList );
+int __twinput_s( miniFILE* inFile, const WCHAR * inFormat, va_list inArgList );
 
 #endif  /* MBUSAFECRT_INTERNAL_H */

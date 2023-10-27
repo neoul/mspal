@@ -692,7 +692,7 @@ private:
 
     static size_t _strcmp(WCHAR const *left, WCHAR const *right)
     {
-        return ::u16_strcmp(left, right);
+        return ::wchar_strcmp(left, right);
     }
 
     static size_t _hash(CHAR const *str)

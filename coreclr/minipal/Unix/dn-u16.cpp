@@ -1,12 +1,15 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
+#if defined(WCHAR_4BYTES)
+typedef wchar_t WCHAR;
+#else // WCHAR_4BYTES
 typedef char16_t WCHAR;
+#endif // WCHAR_4BYTES
 
 #include <dn-u16.h>
 #include <string.h>
 
-size_t u16_strlen(const WCHAR* str)
+size_t wchar_strlen(const WCHAR* str)
 {
     size_t nChar = 0;
     while (*str++)
@@ -14,12 +17,12 @@ size_t u16_strlen(const WCHAR* str)
     return nChar;
 }
 
-int u16_strcmp(const WCHAR* str1, const WCHAR* str2)
+int wchar_strcmp(const WCHAR* str1, const WCHAR* str2)
 {
-    return u16_strncmp(str1, str2, 0x7fffffff);
+    return wchar_strncmp(str1, str2, 0x7fffffff);
 }
 
-int u16_strncmp(const WCHAR* str1, const WCHAR* str2, size_t count)
+int wchar_strncmp(const WCHAR* str1, const WCHAR* str2, size_t count)
 {
     int diff = 0;
     for (size_t i = 0; i < count; i++)
@@ -35,7 +38,7 @@ int u16_strncmp(const WCHAR* str1, const WCHAR* str2, size_t count)
     return diff;
 }
 
-WCHAR* u16_strcat_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
+WCHAR* wchar_strcat_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
 {
     if (dst == nullptr || src == nullptr)
     {
@@ -54,7 +57,7 @@ WCHAR* u16_strcat_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
     }
 
     // concatenate new string
-    size_t srcLength = u16_strlen(src);
+    size_t srcLength = wchar_strlen(src);
     size_t loopCount = 0;
     while (*src && loopCount < srcLength)
     {
@@ -69,7 +72,7 @@ WCHAR* u16_strcat_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
     return start;
 }
 
-WCHAR* u16_strcpy_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
+WCHAR* wchar_strcpy_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
 {
     if (dst == nullptr || src == nullptr)
     {
@@ -92,11 +95,11 @@ WCHAR* u16_strcpy_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
     return start;
 }
 
-WCHAR* u16_strncpy_s(WCHAR* dst, size_t dstLen, const WCHAR* src, size_t count)
+WCHAR* wchar_strncpy_s(WCHAR* dst, size_t dstLen, const WCHAR* src, size_t count)
 {
     ::memset(dst, 0, dstLen * sizeof(WCHAR));
 
-    size_t srcLength = u16_strlen(src);
+    size_t srcLength = wchar_strlen(src);
     size_t length = (count < srcLength) ? count : srcLength;
     if (length > dstLen)
         return nullptr;
@@ -105,7 +108,7 @@ WCHAR* u16_strncpy_s(WCHAR* dst, size_t dstLen, const WCHAR* src, size_t count)
     return dst;
 }
 
-const WCHAR* u16_strstr(const WCHAR *str, const WCHAR *strCharSet)
+const WCHAR* wchar_strstr(const WCHAR *str, const WCHAR *strCharSet)
 {
     if (str == nullptr || strCharSet == nullptr)
     {
@@ -113,7 +116,7 @@ const WCHAR* u16_strstr(const WCHAR *str, const WCHAR *strCharSet)
     }
 
     // No characters to examine
-    if (u16_strlen(strCharSet) == 0)
+    if (wchar_strlen(strCharSet) == 0)
         return str;
 
     const WCHAR* ret = nullptr;
@@ -145,7 +148,7 @@ const WCHAR* u16_strstr(const WCHAR *str, const WCHAR *strCharSet)
     return ret;
 }
 
-const WCHAR* u16_strchr(const WCHAR* str, WCHAR ch)
+const WCHAR* wchar_strchr(const WCHAR* str, WCHAR ch)
 {
     while (*str)
     {
@@ -161,7 +164,7 @@ const WCHAR* u16_strchr(const WCHAR* str, WCHAR ch)
     return nullptr;
 }
 
-const WCHAR* u16_strrchr(const WCHAR* str, WCHAR ch)
+const WCHAR* wchar_strrchr(const WCHAR* str, WCHAR ch)
 {
     const WCHAR* last = nullptr;
     while (*str)
@@ -179,17 +182,17 @@ extern "C" uint32_t PAL_wcstoul(const WCHAR* nptr, WCHAR** endptr, int base);
 extern "C" uint64_t PAL__wcstoui64(const WCHAR* nptr, WCHAR** endptr, int base);
 extern "C" double PAL_wcstod(const WCHAR* nptr, WCHAR** endptr);
 
-uint32_t u16_strtoul(const WCHAR* nptr, WCHAR** endptr, int base)
+uint32_t wchar_strtoul(const WCHAR* nptr, WCHAR** endptr, int base)
 {
     return PAL_wcstoul(nptr, endptr, base);
 }
 
-uint64_t u16_strtoui64(const WCHAR* nptr, WCHAR** endptr, int base)
+uint64_t wchar_strtoui64(const WCHAR* nptr, WCHAR** endptr, int base)
 {
     return PAL__wcstoui64(nptr, endptr, base);
 }
 
-double u16_strtod(const WCHAR* nptr, WCHAR** endptr)
+double wchar_strtod(const WCHAR* nptr, WCHAR** endptr)
 {
     return PAL_wcstod(nptr, endptr);
 }

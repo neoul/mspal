@@ -250,6 +250,7 @@ elseif (CLR_CMAKE_HOST_ARCH_POWERPC64)
 else ()
   clr_unknown_arch()
 endif ()
+target_compile_definitions(coreclrpal PUBLIC -DWCHAR_4BYTES)
 target_include_directories(coreclrpal PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../native)
 target_include_directories(coreclrpal PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../inc)
 

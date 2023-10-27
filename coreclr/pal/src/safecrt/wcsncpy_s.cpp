@@ -23,7 +23,11 @@
 
 #define _FUNC_PROLOGUE
 #define _FUNC_NAME wcsncpy_s
+#if defined(WCHAR_4BYTES)
+#define _CHAR wchar_t
+#else // WCHAR_4BYTES
 #define _CHAR char16_t
+#endif // WCHAR_4BYTES
 #define _DEST _Dst
 #define _SIZE _SizeInWords
 #define _SRC _Src

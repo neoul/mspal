@@ -46,6 +46,7 @@ class _variant_t;
 
 namespace _com_util
 {
+
   inline void CheckError(HRESULT hr)
   {
     if (FAILED(hr))
@@ -53,10 +54,7 @@ namespace _com_util
       _com_issue_error(hr);
     }
   }
-}
-
-namespace _com_util
-{
+  
   BSTR ConvertStringToBSTR(const char *pSrc)
   {
     if (pSrc == NULL)

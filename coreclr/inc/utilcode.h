@@ -207,7 +207,7 @@ typedef LPSTR   LPUTF8;
 // representable.  This is reasonable for writing to the console, but
 // shouldn't be used for most string conversions.
 #define MAKE_MULTIBYTE_FROMWIDE_BESTFIT(ptrname, widestr, codepage) \
-    int __l##ptrname = (int)u16_strlen(widestr);        \
+    int __l##ptrname = (int)wchar_strlen(widestr);        \
     if (__l##ptrname > MAKE_MAX_LENGTH)         \
         MAKE_TOOLONGACTION;                     \
     __l##ptrname = (int)((__l##ptrname + 1) * 2 * sizeof(char)); \
@@ -223,7 +223,7 @@ typedef LPSTR   LPUTF8;
 
 #define MAKE_UTF8PTR_FROMWIDE_NOTHROW(ptrname, widestr) \
     CQuickBytes __qb##ptrname; \
-    int __l##ptrname = (int)u16_strlen(widestr); \
+    int __l##ptrname = (int)wchar_strlen(widestr); \
     LPUTF8 ptrname = 0; \
     if (__l##ptrname <= MAKE_MAX_LENGTH) { \
         __l##ptrname = (int)((__l##ptrname + 1) * 2 * sizeof(char)); \
@@ -448,7 +448,7 @@ public:
         if (id == UICULTUREID_DONTCARE)
             return FALSE;
 
-        return u16_strcmp(id, m_LangId) == 0;
+        return wchar_strcmp(id, m_LangId) == 0;
     }
 
     HRESOURCEDLL GetLibraryHandle()
@@ -2202,7 +2202,7 @@ inline ULONG HashStringN(LPCWSTR szStr, SIZE_T cchStr)
     ULONG *ptr = (ULONG *)szStr;
 
     // we assume that szStr is null-terminated
-    _ASSERTE(cchStr <= u16_strlen(szStr));
+    _ASSERTE(cchStr <= wchar_strlen(szStr));
     SIZE_T cDwordCount = (cchStr + 1) / 2;
 
     for (SIZE_T i = 0; i < cDwordCount; i++)

@@ -40,8 +40,7 @@
 *Exceptions:
 *
 *******************************************************************************/
-
-size_t __cdecl PAL_wcsnlen(const char16_t *wcs, size_t maxsize)
+size_t __cdecl PAL_wcsnlen(const WCHAR *wcs, size_t maxsize)
 {
     size_t n;
 

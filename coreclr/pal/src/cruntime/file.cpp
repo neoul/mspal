@@ -292,8 +292,8 @@ see MSDN doc.
 PAL_FILE *
 __cdecl
 _wfopen(
-    const wchar_16 *fileName,
-    const wchar_16 *mode)
+    const WCHAR *fileName,
+    const WCHAR *mode)
 {
     CHAR mbFileName[ _MAX_PATH ];
     CHAR mbMode[ 10 ];

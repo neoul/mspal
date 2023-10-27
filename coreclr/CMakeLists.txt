@@ -11,6 +11,9 @@ cmake_minimum_required(VERSION 3.20)
 
 # Set the project name
 project(CoreCLR)
+
+add_definitions(-DWCHAR_4BYTES)
+
 include(configuretarget.cmake)
 include(configurepaths.cmake)
 include(configuretools.cmake)

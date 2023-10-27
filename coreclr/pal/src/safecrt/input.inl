@@ -239,7 +239,7 @@ static int __check_float_string(size_t nFloatStrUsed,
 
 
 #ifndef _UNICODE
-    char16_t wctemp=L'\0';
+    WCHAR wctemp=L'\0';
 #endif  /* _UNICODE */
     _TUCHAR *scanptr;                   /* for building "table" data         */
     int ch = 0;
@@ -265,7 +265,7 @@ static int __check_float_string(size_t nFloatStrUsed,
 #if _INTEGRAL_MAX_BITS >= 64
     int integer64;                      /* 1 for 64-bit integer, 0 otherwise */
 #endif  /* _INTEGRAL_MAX_BITS >= 64    */
-    signed char widechar;               /* -1 = char, 0 = ????, 1 = char16_t  */
+    signed char widechar;               /* -1 = char, 0 = ????, 1 = WCHAR  */
     char reject;                        /* %[^ABC] instead of %[ABC]         */
     char negative;                      /* flag for '-' detected             */
     char suppress;                      /* don't assign anything             */
@@ -494,7 +494,7 @@ DEFAULT_LABEL:
 
                     if(array_width < 1) {
                         if (widechar > 0)
-                            *(char16_t UNALIGNED *)pointer = L'\0';
+                            *(WCHAR UNALIGNED *)pointer = L'\0';
                         else
                             *(char *)pointer = '\0';
 
@@ -657,17 +657,17 @@ scanit:
                                         }
 #endif  /* 0 */
                                         _MBTOWC(&wctemp, temp, MB_CUR_MAX);
-                                        *(char16_t UNALIGNED *)pointer = wctemp;
+                                        *(WCHAR UNALIGNED *)pointer = wctemp;
                                         /* just copy W('?') if mbtowc fails, errno is set by mbtowc */
-                                        pointer = (char16_t *)pointer + 1;
+                                        pointer = (WCHAR *)pointer + 1;
 #ifdef _SECURE_SCANF
                                         --array_width;
 #endif  /* _SECURE_SCANF */
                                     } else
 #else  /* _UNICODE */
                                     if (fl_wchar_arg) {
-                                        *(char16_t UNALIGNED *)pointer = (char16_t)ch;
-                                        pointer = (char16_t *)pointer + 1;
+                                        *(WCHAR UNALIGNED *)pointer = (WCHAR)ch;
+                                        pointer = (WCHAR *)pointer + 1;
 #ifdef _SECURE_SCANF
                                         --array_width;
 #endif  /* _SECURE_SCANF */
@@ -738,7 +738,7 @@ scanit:
                             /* In case of error, blank out the input buffer */
                             if (fl_wchar_arg)
                             {
-                                _RESET_STRING(((char16_t UNALIGNED *)start), original_array_width);
+                                _RESET_STRING(((WCHAR UNALIGNED *)start), original_array_width);
                             }
                             else
                             {
@@ -756,10 +756,10 @@ scanit:
                                 {
                                     if (fl_wchar_arg)
                                     {
-                                        *(char16_t UNALIGNED *)pointer = L'\0';
+                                        *(WCHAR UNALIGNED *)pointer = L'\0';
 #ifdef _SECURE_SCANF
-                                        _FILL_STRING(((char16_t UNALIGNED *)start), original_array_width,
-                                            ((char16_t UNALIGNED *)pointer - (char16_t UNALIGNED *)start + 1))
+                                        _FILL_STRING(((WCHAR UNALIGNED *)start), original_array_width,
+                                            ((WCHAR UNALIGNED *)pointer - (WCHAR UNALIGNED *)start + 1))
 #endif  /* _SECURE_SCANF */
                                     }
                                     else

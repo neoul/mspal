@@ -41,9 +41,9 @@
 #define _TCHAR CRT_TCHAR
 #define TCHAR CRTTCHAR
 
-typedef char16_t         _TCHAR;
-typedef char16_t         TCHAR;
-typedef char16_t         _TUCHAR;
+typedef WCHAR         _TCHAR;
+typedef WCHAR         TCHAR;
+typedef WCHAR         _TUCHAR;
 #define _T(x)       x
 #define _TEOF       WEOF
 

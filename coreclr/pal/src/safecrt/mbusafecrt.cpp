@@ -55,16 +55,16 @@ int _putc_nolock( char inChar, miniFILE* inStream )
 *   _putwc_nolock - putwc for the miniFILE stream.
 ****/
 
-int _putwc_nolock( char16_t inChar, miniFILE* inStream )
+int _putwc_nolock( WCHAR inChar, miniFILE* inStream )
 {
     int returnValue = WEOF;
 
-        inStream->_cnt -= sizeof( char16_t );
+        inStream->_cnt -= sizeof( WCHAR );
 
     if ( ( inStream->_cnt ) >= 0 )
     {
-        *( ( char16_t* )( inStream->_ptr ) ) = inChar;
-        inStream->_ptr += sizeof( char16_t );
+        *( ( WCHAR* )( inStream->_ptr ) ) = inChar;
+        inStream->_ptr += sizeof( WCHAR );
         returnValue = ( int )inChar;
     }
 
@@ -97,11 +97,11 @@ int _getwc_nolock( miniFILE* inStream )
 {
     int returnValue = EOF;
 
-    if ( ( inStream->_cnt ) >= ( int )( sizeof( char16_t ) ) )
+    if ( ( inStream->_cnt ) >= ( int )( sizeof( WCHAR ) ) )
     {
-        inStream->_cnt -= sizeof( char16_t );
-        returnValue = ( int )( *( ( char16_t* )( inStream->_ptr ) ) );
-        inStream->_ptr += sizeof( char16_t );
+        inStream->_cnt -= sizeof( WCHAR );
+        returnValue = ( int )( *( ( WCHAR* )( inStream->_ptr ) ) );
+        inStream->_ptr += sizeof( WCHAR );
     }
 
     return returnValue;
@@ -129,14 +129,14 @@ int _ungetc_nolock( char inChar, miniFILE* inStream )
 *   _ungetwc_nolock - ungetwc for the miniFILE stream.
 ****/
 
-int _ungetwc_nolock( char16_t inChar, miniFILE* inStream )
+int _ungetwc_nolock( WCHAR inChar, miniFILE* inStream )
 {
     int returnValue = WEOF;
 
-    if ( ( size_t )( ( inStream->_ptr ) - ( inStream->_base ) ) >= ( sizeof( char16_t ) ) )
+    if ( ( size_t )( ( inStream->_ptr ) - ( inStream->_base ) ) >= ( sizeof( WCHAR ) ) )
     {
-        inStream->_cnt += sizeof( char16_t );
-        inStream->_ptr -= sizeof( char16_t );
+        inStream->_cnt += sizeof( WCHAR );
+        inStream->_ptr -= sizeof( WCHAR );
         returnValue = ( unsigned short )inChar;
     }
 
@@ -207,13 +207,13 @@ void _safecrt_fassign(int flag, void* argument, char* number )
 
 
 /***
-*   _safecrt_wfassign - convert a char16_t string into a float or double.
+*   _safecrt_wfassign - convert a WCHAR string into a float or double.
 ****/
 
-void _safecrt_wfassign(int flag, void* argument, char16_t* number )
+void _safecrt_wfassign(int flag, void* argument, WCHAR* number )
 {
     // We cannot use system functions for this - they
-    // assume that char16_t is four bytes, while we assume
+    // assume that WCHAR is four bytes, while we assume
     // two. So, we need to convert to a regular char string
     // without using any system functions. To do this,
     // we'll assume that the numbers are in the 0-9 range and
@@ -239,9 +239,9 @@ void _safecrt_wfassign(int flag, void* argument, char16_t* number )
 *   _minimal_chartowchar - do a simple char to wchar conversion.
 ****/
 
-int _minimal_chartowchar( char16_t* outWChar, const char* inChar )
+int _minimal_chartowchar( WCHAR* outWChar, const char* inChar )
 {
-    *outWChar = ( char16_t )( ( unsigned short )( ( unsigned char )( *inChar ) ) );
+    *outWChar = ( WCHAR )( ( unsigned short )( ( unsigned char )( *inChar ) ) );
     return 1;
 }
 
