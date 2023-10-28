@@ -27,6 +27,7 @@ Abstract:
 
 #ifdef __cplusplus
 typedef char16_t wchar_16; // __wchar_16_cpp (which is defined in palinternal.h) needs to be redefined to wchar_16.
+typedef char32_t wchar_32; // __wchar_32_cpp (which is defined in palinternal.h) needs to be redefined to wchar_32.
 extern "C"
 {
 #endif // __cplusplus
