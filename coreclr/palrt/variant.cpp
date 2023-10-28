@@ -31,10 +31,19 @@ VariantInit(VARIANT FAR* pvarg)
     V_VT(pvarg) = VT_EMPTY;
 }
 
+STDAPI_(HRESULT) VariantClear(
+  IN OUT VARIANTARG *pvarg
+) {
+    return S_OK;
+}
+
 STDAPI_(HRESULT) VariantCopy(
     IN VARIANTARG *pvargDest,
     OUT const VARIANTARG *pvargSrc)
 {
+    // VariantClear(pvargDest);
+    // VariantInit(pvargDest);
+    // and then set the value of pvargDest from the value of pvargSrc.
     return S_OK;
 }
 
