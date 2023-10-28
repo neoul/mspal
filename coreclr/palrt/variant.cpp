@@ -30,3 +30,20 @@ VariantInit(VARIANT FAR* pvarg)
 {
     V_VT(pvarg) = VT_EMPTY;
 }
+
+STDAPI_(HRESULT) VariantCopy(
+    IN VARIANTARG *pvargDest,
+    OUT const VARIANTARG *pvargSrc)
+{
+    return S_OK;
+}
+
+STDAPI_(HRESULT) VariantChangeType(
+  OUT VARIANTARG       *pvargDest,
+  IN  const VARIANTARG *pvarSrc,
+  IN  USHORT           wFlags,
+  IN  VARTYPE          vt
+) {
+    return S_OK;
+}
+

@@ -6,8 +6,11 @@
 #ifndef _INC_COMUTIL
 #define _INC_COMUTIL
 
-// #include <ole2.h>
-// #include <stdio.h>
+#include <palrt.h>
+#include <mingw.h> // It is needed to overwrite some definitions.
+
+#include <ole2.h>
+#include <stdio.h>
 
 #ifndef _COM_ASSERT
 #define _COM_ASSERT(x) ((void)0)
@@ -44,28 +47,102 @@ void WINAPI _com_issue_error(HRESULT);
 class _bstr_t;
 class _variant_t;
 
+// BSTR format:
+// [4 bytes (length prefix)], wchar_t[length], L'\0'[\0]
 BSTR SysAllocString(const OLECHAR *psz)
 {
-  if (psz == nullptr)
-    return nullptr;
+  if (psz == NULL)
+    return NULL;
 
-  size_t len = PAL_wcslen(psz); // Calculate the length of the input string, including the null terminator
-  size_t total = len + sizeof(unsigned int);
-  unsigned int *destination = (unsigned int *)malloc(total); // Allocate memory for the new wide string
-  if (destination)
+  size_t len = wcslen(psz);
+  size_t total = (len + 1) * sizeof(WCHAR) + sizeof(UINT);
+  UINT *ptr = (UINT *)malloc(total);
+  if (ptr)
   {
-    destination[0] = len; // Store the length of the string in the first 4 bytes
-    destination++;        // Move the pointer forward by 4 bytes
-    WCHAR *wc = (WCHAR *)destination;
-    PAL_wcscpy(wc, psz); // Copy the input string to the allocated memory
+    ptr[0] = len;
+    ptr++;
+    wcscpy((WCHAR *)ptr, psz);
   }
-  return (BSTR)destination;
+  return (BSTR)ptr;
 }
 
-void SysFreeString(OLECHAR *bstr)
+BSTR SysAllocStringLen(const OLECHAR *strIn, UINT ui)
 {
-  if (bstr != nullptr)
-    free(bstr); // Free the memory occupied by the BSTR
+  size_t total = (ui + 1) * sizeof(WCHAR) + sizeof(UINT);
+  UINT *ptr = (UINT *)malloc(total);
+  if (ptr)
+  {
+    memset(ptr, 0, total);
+    ptr[0] = ui;
+    ptr++;
+    if (strIn != NULL)
+    {
+      size_t len = wcslen(strIn);
+      size_t min = len < ui ? len : ui;
+      wcsncpy((WCHAR *)ptr, strIn, min);
+    }
+  }
+  return (BSTR)ptr;
+}
+
+// It does not perform any ANSI-to-Unicode translation.... need dobule check.
+// [FIXME] minipal_get_length_utf8_to_utf16, MultiByteToWideChar
+BSTR SysAllocStringByteLen(LPCSTR psz, UINT len)
+{
+  size_t total = len + sizeof(OLECHAR) + sizeof(UINT);
+  UINT *ptr = (UINT *)malloc(total);
+  if (ptr)
+  {
+    memset(ptr, 0, total);
+    ptr[0] = len;
+    ptr++;
+    if (psz != NULL)
+      strncpy((char *)ptr, psz, len);
+  }
+  return (BSTR)ptr;
+}
+
+// deallocate strings by SysAllocString, SysAllocStringByteLen,
+// SysReAllocString, SysAllocStringLen, or SysReAllocStringLen.
+void SysFreeString(BSTR bstrString)
+{
+  if (bstrString != NULL)
+  {
+    UINT *ptr = (UINT *)bstrString;
+    ptr--;
+    free(ptr);
+  }
+}
+
+UINT SysStringLen(BSTR pbstr)
+{
+  if (pbstr == NULL)
+    return 0;
+
+  UINT *ptr = (UINT *)pbstr;
+  ptr--;
+  return *ptr;
+}
+
+UINT SysStringByteLen(BSTR pbstr)
+{
+  if (pbstr == NULL)
+    return 0;
+
+  UINT len = SysStringLen(pbstr);
+  UINT byteLen = len * sizeof(OLECHAR);
+  return byteLen;
+}
+
+HLOCAL LocalAlloc(UINT uFlags, SIZE_T uBytes)
+{
+  return malloc(uBytes);
+}
+
+HLOCAL LocalFree(HLOCAL hMem)
+{
+  free(hMem);
+  return NULL;
 }
 
 namespace _com_util
@@ -79,48 +156,38 @@ namespace _com_util
     }
   }
 
+  // it will convert utf8 (multi-bytes characters) to utf16 or utf32 depends on sizeof(wchar_t)
   BSTR ConvertStringToBSTR(const char *pSrc)
   {
-    if (pSrc == nullptr)
-      return nullptr;
-
-    // Determine the required size for the BSTR
-    size_t len = mbstowcs(nullptr, pSrc, 0);
+    if (pSrc == NULL)
+      return NULL;
+    size_t len = mbstowcs(NULL, pSrc, 0);
     if (len == (size_t)-1)
-      return nullptr; // Conversion error
-
-    // Allocate memory for the BSTR
-    BSTR bstr = (BSTR)malloc((len + 1) * sizeof(wchar_t));
-    if (bstr == nullptr)
-      return nullptr; // Memory allocation failed
-
-    // Convert the input string to wide characters
-    if (mbstowcs(bstr, pSrc, len + 1) == (size_t)-1)
+      return NULL;
+    size_t total = (len + 1) * sizeof(WCHAR) + sizeof(UINT);
+    UINT *ptr = (UINT *)malloc(total);
+    if (ptr != NULL)
     {
-      free(bstr);
-      return nullptr; // Conversion error
+      ptr[0] = len;
+      ptr++;
+      if (pSrc != NULL)
+        mbstowcs((BSTR)ptr, pSrc, len + 1);
     }
-    return bstr;
+    return (BSTR)ptr;
   }
 
-  char *WINAPI ConvertBSTRToString(BSTR pSrc)
+  char *ConvertBSTRToString(BSTR pSrc)
   {
-    if (pSrc == nullptr)
-      return nullptr;
-    char *bstr = (char *)pSrc;
-    // The first 4 bytes of a BSTR contain the length (in bytes) of the string.
-    unsigned int len = *(unsigned int *)bstr;
-
-    // Allocate memory for the C-style string (plus one for the null-terminator).
-    char *result = (char *)malloc(len + 1);
-
-    if (result != nullptr)
-    {
-      // Copy the characters from the BSTR to the C-style string.
-      strncpy(result, bstr + 4, len);
-      result[len] = '\0'; // Null-terminate the string.
-    }
-    return result;
+    size_t len = wcstombs(NULL, pSrc, 0);
+    if (len < 0)
+      return NULL;
+    char *mbs = (char *)malloc(len + 1);
+    if (mbs == NULL)
+      return NULL;
+    if (wcstombs(mbs, pSrc, len + 1) == (size_t)-1)
+      return NULL;
+    mbs[len] = '\0';
+    return mbs;
   }
 }
 
@@ -580,16 +647,18 @@ public:
   _variant_t(const _bstr_t &bstrSrc);
   _variant_t(const wchar_t *pSrc);
   _variant_t(const char *pSrc);
-  _variant_t(IDispatch *pSrc, bool fAddRef = true) throw();
+  // _variant_t(IDispatch *pSrc, bool fAddRef = true) throw();
   _variant_t(bool boolSrc) throw();
-  _variant_t(IUnknown *pSrc, bool fAddRef = true) throw();
+  // _variant_t(IUnknown *pSrc, bool fAddRef = true) throw();
   _variant_t(const DECIMAL &decSrc) throw();
   _variant_t(BYTE bSrc) throw();
   _variant_t(char cSrc) throw();
   _variant_t(unsigned short usSrc) throw();
   _variant_t(unsigned __LONG32 ulSrc) throw();
   _variant_t(int iSrc) throw();
+#if __LONG32 != int
   _variant_t(unsigned int uiSrc) throw();
+#endif
   __MINGW_EXTENSION _variant_t(__int64 i8Src) throw();
   __MINGW_EXTENSION _variant_t(unsigned __int64 ui8Src) throw();
   ~_variant_t() throw();
@@ -599,17 +668,19 @@ public:
   operator double() const;
   operator CY() const;
   operator _bstr_t() const;
-  operator IDispatch *() const;
+  // operator IDispatch *() const;
   operator bool() const;
   operator IUnknown *() const;
   operator DECIMAL() const;
   operator BYTE() const;
-  operator VARIANT() const throw();
+  // operator VARIANT() const throw();
   operator char() const;
   operator unsigned short() const;
   operator unsigned __LONG32() const;
+#if __LONG32 != int
   operator int() const;
   operator unsigned int() const;
+#endif
   __MINGW_EXTENSION operator __int64() const;
   __MINGW_EXTENSION operator unsigned __int64() const;
   _variant_t &operator=(const VARIANT &varSrc);
@@ -623,16 +694,18 @@ public:
   _variant_t &operator=(const _bstr_t &bstrSrc);
   _variant_t &operator=(const wchar_t *pSrc);
   _variant_t &operator=(const char *pSrc);
-  _variant_t &operator=(IDispatch *pSrc);
+  // _variant_t &operator=(IDispatch *pSrc);
   _variant_t &operator=(bool boolSrc);
-  _variant_t &operator=(IUnknown *pSrc);
+  // _variant_t &operator=(IUnknown *pSrc);
   _variant_t &operator=(const DECIMAL &decSrc);
   _variant_t &operator=(BYTE bSrc);
   _variant_t &operator=(char cSrc);
   _variant_t &operator=(unsigned short usSrc);
   _variant_t &operator=(unsigned __LONG32 ulSrc);
+#if __LONG32 != int
   _variant_t &operator=(int iSrc);
   _variant_t &operator=(unsigned int uiSrc);
+#endif
   __MINGW_EXTENSION _variant_t &operator=(__int64 i8Src);
   __MINGW_EXTENSION _variant_t &operator=(unsigned __int64 ui8Src);
   bool operator==(const VARIANT &varSrc) const throw();
@@ -783,25 +856,25 @@ inline _variant_t::_variant_t(const char *pSrc)
   V_VT(this) = VT_BSTR;
   V_BSTR(this) = _com_util::ConvertStringToBSTR(pSrc);
 }
-inline _variant_t::_variant_t(IDispatch *pSrc, bool fAddRef) throw()
-{
-  V_VT(this) = VT_DISPATCH;
-  V_DISPATCH(this) = pSrc;
-  if (fAddRef && V_DISPATCH(this) != NULL)
-    V_DISPATCH(this)->AddRef();
-}
+// inline _variant_t::_variant_t(IDispatch *pSrc, bool fAddRef) throw()
+// {
+//   V_VT(this) = VT_DISPATCH;
+//   V_DISPATCH(this) = pSrc;
+//   if (fAddRef && V_DISPATCH(this) != NULL)
+//     V_DISPATCH(this)->AddRef();
+// }
 inline _variant_t::_variant_t(bool boolSrc) throw()
 {
   V_VT(this) = VT_BOOL;
   V_BOOL(this) = (boolSrc ? VARIANT_TRUE : VARIANT_FALSE);
 }
-inline _variant_t::_variant_t(IUnknown *pSrc, bool fAddRef) throw()
-{
-  V_VT(this) = VT_UNKNOWN;
-  V_UNKNOWN(this) = pSrc;
-  if (fAddRef && V_UNKNOWN(this) != NULL)
-    V_UNKNOWN(this)->AddRef();
-}
+// inline _variant_t::_variant_t(IUnknown *pSrc, bool fAddRef) throw()
+// {
+//   V_VT(this) = VT_UNKNOWN;
+//   V_UNKNOWN(this) = pSrc;
+//   if (fAddRef && V_UNKNOWN(this) != NULL)
+//     V_UNKNOWN(this)->AddRef();
+// }
 inline _variant_t::_variant_t(const DECIMAL &decSrc) throw()
 {
   V_DECIMAL(this) = decSrc;
@@ -832,11 +905,13 @@ inline _variant_t::_variant_t(int iSrc) throw()
   V_VT(this) = VT_INT;
   V_INT(this) = iSrc;
 }
+#if __LONG32 != int
 inline _variant_t::_variant_t(unsigned int uiSrc) throw()
 {
   V_VT(this) = VT_UINT;
   V_UINT(this) = uiSrc;
 }
+#endif
 __MINGW_EXTENSION inline _variant_t::_variant_t(__int64 i8Src) throw()
 {
   V_VT(this) = VT_I8;
@@ -900,20 +975,20 @@ inline _variant_t::operator _bstr_t() const
   return V_BSTR(&varDest);
 }
 
-inline _variant_t::operator IDispatch *() const
-{
-  if (V_VT(this) == VT_DISPATCH)
-  {
-    if (V_DISPATCH(this) != NULL)
-      V_DISPATCH(this)->AddRef();
-    return V_DISPATCH(this);
-  }
-  _variant_t varDest;
-  varDest.ChangeType(VT_DISPATCH, this);
-  if (V_DISPATCH(&varDest) != NULL)
-    V_DISPATCH(&varDest)->AddRef();
-  return V_DISPATCH(&varDest);
-}
+// inline _variant_t::operator IDispatch *() const
+// {
+//   if (V_VT(this) == VT_DISPATCH)
+//   {
+//     // if (V_DISPATCH(this) != NULL)
+//     //   V_DISPATCH(this)->AddRef();
+//     return V_DISPATCH(this);
+//   }
+//   _variant_t varDest;
+//   varDest.ChangeType(VT_DISPATCH, this);
+//   // if (V_DISPATCH(&varDest) != NULL)
+//   //   V_DISPATCH(&varDest)->AddRef();
+//   return V_DISPATCH(&varDest);
+// }
 inline _variant_t::operator bool() const
 {
   if (V_VT(this) == VT_BOOL)
@@ -953,7 +1028,7 @@ inline _variant_t::operator BYTE() const
   varDest.ChangeType(VT_UI1, this);
   return V_UI1(&varDest);
 }
-inline _variant_t::operator VARIANT() const throw() { return *(VARIANT *)this; }
+// inline _variant_t::operator VARIANT() const throw() { return *(VARIANT *)this; }
 inline _variant_t::operator char() const
 {
   if (V_VT(this) == VT_I1)
@@ -980,6 +1055,7 @@ inline _variant_t::operator unsigned __LONG32() const
   varDest.ChangeType(VT_UI4, this);
   return V_UI4(&varDest);
 }
+#if __LONG32 != int
 inline _variant_t::operator int() const
 {
   if (V_VT(this) == VT_INT)
@@ -996,6 +1072,7 @@ inline _variant_t::operator unsigned int() const
   varDest.ChangeType(VT_UINT, this);
   return V_UINT(&varDest);
 }
+#endif
 __MINGW_EXTENSION inline _variant_t::operator __int64() const
 {
   if (V_VT(this) == VT_I8)
@@ -1175,23 +1252,22 @@ inline _variant_t &_variant_t::operator=(const char *pSrc)
   return *this;
 }
 
-inline _variant_t &_variant_t::operator=(IDispatch *pSrc)
-{
-  _COM_ASSERT(V_VT(this) != VT_DISPATCH || pSrc == 0 || V_DISPATCH(this) != pSrc);
+// inline _variant_t &_variant_t::operator=(IDispatch *pSrc)
+// {
+//   _COM_ASSERT(V_VT(this) != VT_DISPATCH || pSrc == 0 || V_DISPATCH(this) != pSrc);
 
-  Clear();
+//   Clear();
 
-  V_VT(this) = VT_DISPATCH;
-  V_DISPATCH(this) = pSrc;
+//   V_VT(this) = VT_DISPATCH;
+//   V_DISPATCH(this) = pSrc;
 
-  if (V_DISPATCH(this) != NULL)
-  {
+//   if (V_DISPATCH(this) != NULL)
+//   {
+//     V_DISPATCH(this)->AddRef();
+//   }
 
-    V_DISPATCH(this)->AddRef();
-  }
-
-  return *this;
-}
+//   return *this;
+// }
 
 inline _variant_t &_variant_t::operator=(bool boolSrc)
 {
@@ -1208,23 +1284,23 @@ inline _variant_t &_variant_t::operator=(bool boolSrc)
   return *this;
 }
 
-inline _variant_t &_variant_t::operator=(IUnknown *pSrc)
-{
-  _COM_ASSERT(V_VT(this) != VT_UNKNOWN || !pSrc || V_UNKNOWN(this) != pSrc);
+// inline _variant_t &_variant_t::operator=(IUnknown *pSrc)
+// {
+//   _COM_ASSERT(V_VT(this) != VT_UNKNOWN || !pSrc || V_UNKNOWN(this) != pSrc);
 
-  Clear();
+//   Clear();
 
-  V_VT(this) = VT_UNKNOWN;
-  V_UNKNOWN(this) = pSrc;
+//   V_VT(this) = VT_UNKNOWN;
+//   V_UNKNOWN(this) = pSrc;
 
-  if (V_UNKNOWN(this) != NULL)
-  {
+//   if (V_UNKNOWN(this) != NULL)
+//   {
 
-    V_UNKNOWN(this)->AddRef();
-  }
+//     V_UNKNOWN(this)->AddRef();
+//   }
 
-  return *this;
-}
+//   return *this;
+// }
 
 inline _variant_t &_variant_t::operator=(const DECIMAL &decSrc)
 {
@@ -1300,6 +1376,7 @@ inline _variant_t &_variant_t::operator=(unsigned __LONG32 ulSrc)
   return *this;
 }
 
+#if __LONG32 != int
 inline _variant_t &_variant_t::operator=(int iSrc)
 {
   if (V_VT(this) != VT_INT)
@@ -1329,7 +1406,7 @@ inline _variant_t &_variant_t::operator=(unsigned int uiSrc)
 
   return *this;
 }
-
+#endif
 __MINGW_EXTENSION inline _variant_t &_variant_t::operator=(__int64 i8Src)
 {
   if (V_VT(this) != VT_I8)

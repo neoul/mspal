@@ -505,6 +505,13 @@ typedef VARIANT VARIANTARG, *LPVARIANTARG;
 
 STDAPI_(void) VariantInit(VARIANT * pvarg);
 STDAPI_(HRESULT) VariantClear(VARIANT * pvarg);
+STDAPI_(HRESULT) VariantCopy(VARIANTARG *pvargDest, const VARIANTARG *pvargSrc);
+STDAPI_(HRESULT) VariantChangeType(
+  OUT VARIANTARG       *pvargDest,
+  IN  const VARIANTARG *pvarSrc,
+  IN  USHORT           wFlags,
+  IN  VARTYPE          vt
+);
 
 #define V_VT(X)         ((X)->n1.n2.vt)
 #define V_UNION(X, Y)   ((X)->n1.n2.n3.Y)
