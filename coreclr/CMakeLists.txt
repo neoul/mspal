@@ -11,11 +11,7 @@ cmake_minimum_required(VERSION 3.20)
 
 # Set the project name
 project(CoreCLR)
-
-set(WCHAR_4BYTES ON)
-if (WCHAR_4BYTES)
-  add_definitions(-DWCHAR_4BYTES)
-endif (WCHAR_4BYTES)
+add_compile_options(-fshort-wchar)
 
 include(configuretarget.cmake)
 include(configurepaths.cmake)

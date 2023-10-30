@@ -1,6 +1,6 @@
 # set minimum cmake version
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-
+add_compile_options(-fshort-wchar)
 # project name and language
 project(bstr LANGUAGES CXX)
 add_subdirectory(coreclr)

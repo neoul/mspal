@@ -251,9 +251,6 @@ else ()
   clr_unknown_arch()
 endif ()
 
-if (WCHAR_4BYTES)
-  target_compile_definitions(coreclrpal PUBLIC -DWCHAR_4BYTES)
-endif (WCHAR_4BYTES)
 target_include_directories(coreclrpal PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../native)
 target_include_directories(coreclrpal PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../inc)
 

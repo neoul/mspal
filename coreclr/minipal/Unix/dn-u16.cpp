@@ -1,10 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-#if defined(WCHAR_4BYTES)
 typedef wchar_t WCHAR;
-#else // WCHAR_4BYTES
-typedef char16_t WCHAR;
-#endif // WCHAR_4BYTES
+// typedef char16_t WCHAR;
 
 #include <dn-u16.h>
 #include <string.h>

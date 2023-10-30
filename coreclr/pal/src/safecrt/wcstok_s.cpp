@@ -21,10 +21,6 @@
 
 #define _FUNC_PROLOGUE
 #define _FUNC_NAME wcstok_s
-#if defined(WCHAR_4BYTES)
 #define _CHAR wchar_t
-#else // WCHAR_4BYTES
-#define _CHAR char16_t
-#endif // WCHAR_4BYTES
 
 #include "tcstok_s.inl"

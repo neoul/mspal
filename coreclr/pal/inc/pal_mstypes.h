@@ -588,11 +588,7 @@ typedef LONG_PTR LPARAM;
 #define _PTRDIFF_T
 #endif
 
-#if defined(WCHAR_4BYTES)
 typedef wchar_t WCHAR;
-#else
-typedef char16_t WCHAR;
-#endif
 
 #ifndef PAL_STDCPP_COMPAT
 
