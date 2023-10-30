@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
-
-project(CoreCLR)
+set(CMAKE_CXX_STANDARD 14)
 add_compile_options(-fshort-wchar)
 
+project(CoreCLR)
 include(configuretarget.cmake)
 include(configurepaths.cmake)
 include(configuretools.cmake)
