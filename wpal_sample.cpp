@@ -19,41 +19,31 @@
 #include <fstream>
 #include <string>
 #include <math.h>
+#include <iomanip>
 
 #include <wpal.h>
 
-// namespace _com_util {
-//   inline void CheckError(HRESULT hr) {
-//     if(FAILED(hr)) { _com_issue_error(hr); }
-//   }
-// }
-
-// namespace _com_util {
-//   BSTR WINAPI ConvertStringToBSTR(const char *pSrc);
-//   char *WINAPI ConvertBSTRToString(BSTR pSrc);
-// }
-
-// using namespace std;
+using namespace std;
 
 void use_bstr_t() {
-    _bstr_t bstr1("Hello");
-    std::cout << "hello" << std::endl;
+    
+    _bstr_t bstr1("Hello ");
+    cout << "bstr1 " << bstr1 << endl;
     _bstr_t bstr2("World");
-    std::cout << "world" << std::endl;
+    cout << "bstr2 " << bstr2 << endl;
     _bstr_t bstr3 = bstr1 + bstr2;
-    std::cout << bstr3 << std::endl;
+    cout << "bstr3 " << bstr3 << endl;
 }
 
 int main()
 {
-
-    std::cout << "BSTR" << " " << sizeof(BSTR) << std::endl; // 8
-    std::cout << "tagDEC" << " " << sizeof(tagDEC) << std::endl; // 1
-    std::cout << "wchar_t" << " " << sizeof(wchar_t) << std::endl; // 8
-    std::cout << sizeof(long) << std::endl; // 8
-    std::cout << sizeof(int) << std::endl; // 4
+    // cout << "BSTR" << " " << sizeof(BSTR) << endl; // 8
+    // cout << "tagDEC" << " " << sizeof(tagDEC) << endl; // 1
+    cout << "wchar_t" << " " << sizeof(wchar_t) << endl; // 8
+    // cout << sizeof(long) << endl; // 8
+    // cout << sizeof(int) << endl; // 4
     SYSTEMTIME TheTime;
     GetSystemTime(&TheTime);
-    std::cout << std::string("Hello, CMake world! ") << std::to_string(TheTime.wYear) << std::endl;
+    cout << string("Hello, CMake world! ") << to_string(TheTime.wYear) << endl;
     use_bstr_t();
 }

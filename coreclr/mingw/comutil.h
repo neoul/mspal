@@ -68,7 +68,7 @@ namespace _com_util
     size_t len = mbstowcs(NULL, pSrc, 0);
     if (len == (size_t)-1)
       return NULL;
-    size_t total = (len + 1) * sizeof(WCHAR) + sizeof(UINT);
+    size_t total = (len + 1) * 4 + sizeof(UINT);
     UINT *ptr = (UINT *)malloc(total);
     if (ptr != NULL)
     {
@@ -88,7 +88,7 @@ namespace _com_util
     char *mbs = (char *)malloc(len + 1);
     if (mbs == NULL)
       return NULL;
-    if (wcstombs(mbs, pSrc, len + 1) == (size_t)-1)
+    if (wcstombs(mbs, pSrc, len) == (size_t)-1)
       return NULL;
     mbs[len] = '\0';
     return mbs;
@@ -154,7 +154,7 @@ private:
     void Attach(BSTR s) throw();
     unsigned int Length() const throw();
     int Compare(const Data_t &str) const throw();
-    // void *operator new(size_t sz);
+    void *operator new(size_t sz);
 
   private:
     BSTR m_wstr;
@@ -513,24 +513,24 @@ inline int _bstr_t::Data_t::Compare(const _bstr_t::Data_t &str) const throw()
                                      : 1;
 }
 
-// #ifdef _COM_OPERATOR_NEW_THROWS
-// inline void *_bstr_t::Data_t::operator new(size_t sz)
-// {
-//   try
-//   {
-//     return ::operator new(sz);
-//   }
-//   catch (...)
-//   {
-//     return NULL;
-//   }
-// }
-// #else
-// inline void *_bstr_t::Data_t::operator new(size_t sz)
-// {
-//   return ::operator new(sz);
-// }
-// #endif
+#ifdef _COM_OPERATOR_NEW_THROWS
+inline void *_bstr_t::Data_t::operator new(size_t sz)
+{
+  try
+  {
+    return ::operator new(sz);
+  }
+  catch (...)
+  {
+    return NULL;
+  }
+}
+#else
+inline void *_bstr_t::Data_t::operator new(size_t sz)
+{
+  return ::operator new(sz);
+}
+#endif
 
 inline _bstr_t::Data_t::~Data_t() throw() { _Free(); }
 inline void _bstr_t::Data_t::_Free() throw()
