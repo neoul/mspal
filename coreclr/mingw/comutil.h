@@ -5,7 +5,7 @@
  */
 #ifndef _INC_COMUTIL
 #define _INC_COMUTIL
-
+#include <stdlib.h>
 #include <palrt.h>
 #include <mingw.h> // It is needed to overwrite some definitions.
 
