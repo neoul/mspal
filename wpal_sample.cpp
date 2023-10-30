@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <float.h>
 #include <limits.h>
 #include <math.h>
@@ -20,9 +19,8 @@
 #include <fstream>
 #include <string>
 #include <math.h>
-#include <palrt.h>
 
-#include <comdef.h>
+#include <wpal.h>
 
 // namespace _com_util {
 //   inline void CheckError(HRESULT hr) {

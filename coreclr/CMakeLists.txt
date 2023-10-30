@@ -1,15 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
 
-# SET (CMAKE_BUILD_TYPE Debug) # Debug, Release, RelWithDebInfo, MinSizeRel
-# SET(CMAKE_VERBOSE_MAKEFILE true) # false if you don't want verbose output
-
-# # build output directories
-# top project가 아닐경우 동작 X
-# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
-
-# Set the project name
 project(CoreCLR)
 add_compile_options(-fshort-wchar)
 
@@ -181,3 +171,11 @@ if(NOT CLR_CMAKE_HOST_MACCATALYST AND NOT CLR_CMAKE_HOST_IOS AND NOT CLR_CMAKE_H
   # endif(CLR_CMAKE_HOST_WIN32)
 endif(NOT CLR_CMAKE_HOST_MACCATALYST AND NOT CLR_CMAKE_HOST_IOS AND NOT CLR_CMAKE_HOST_TVOS)
 
+
+file(GLOB wpal_sources mingw/*.h mingw/*.cpp)
+add_library(wpal STATIC ${wpal_sources})
+target_sources(wpal PUBLIC mingw/wpal.h)
+target_include_directories(wpal PUBLIC mingw)
+target_compile_options(wpal PUBLIC -fshort-wchar)
+set_target_properties(wpal PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(wpal PUBLIC coreclrpal palrt)
