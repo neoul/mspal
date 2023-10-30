@@ -37,6 +37,7 @@ void use_bstr_t() {
 
 int main()
 {
+    setlocale(LC_ALL, "");
     // cout << "BSTR" << " " << sizeof(BSTR) << endl; // 8
     // cout << "tagDEC" << " " << sizeof(tagDEC) << endl; // 1
     cout << "wchar_t" << " " << sizeof(wchar_t) << endl; // 8

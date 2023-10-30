@@ -7,6 +7,9 @@
 #define _INC_COMUTIL
 #include <cstdlib>
 #include <iostream>
+#include <codecvt>
+#include <string>
+
 // #include <pal.h>
 #include <palrt.h>
 #include <mingw.h> // It is needed to overwrite some definitions.
@@ -65,33 +68,36 @@ namespace _com_util
   {
     if (pSrc == NULL)
       return NULL;
-    size_t len = mbstowcs(NULL, pSrc, 0);
-    if (len == (size_t)-1)
-      return NULL;
-    size_t total = (len + 1) * 4 + sizeof(UINT);
+    std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> cvt2;
+    std::u16string utf16 = cvt2.from_bytes(pSrc);
+    size_t len = utf16.length();
+    size_t total = (len + 1) * sizeof(wchar_t) + sizeof(UINT);
     UINT *ptr = (UINT *)malloc(total);
     if (ptr != NULL)
     {
       ptr[0] = len;
       ptr++;
-      if (pSrc != NULL)
-        mbstowcs((BSTR)ptr, pSrc, len + 1);
+      BSTR bstr = (BSTR)ptr;
+      for (int i = 0; i < len; i++)
+      {
+        bstr[i] = utf16[i];
+      }
+      bstr[len] = '\0';
     }
     return (BSTR)ptr;
   }
 
   char *ConvertBSTRToString(BSTR pSrc)
   {
-    size_t len = wcstombs(NULL, pSrc, 0);
-    if (len < 0)
-      return NULL;
-    char *mbs = (char *)malloc(len + 1);
-    if (mbs == NULL)
-      return NULL;
-    if (wcstombs(mbs, pSrc, len) == (size_t)-1)
-      return NULL;
-    mbs[len] = '\0';
-    return mbs;
+    std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> cvt2;
+    auto utf8 = cvt2.to_bytes((char16_t *) pSrc);
+    char *p = (char *)malloc(utf8.length() + 1);
+    if (p != NULL)
+    {
+      strcpy(p, utf8.c_str());
+      p[utf8.length()] = '\0';
+    }
+    return p;
   }
 }
 
@@ -113,7 +119,7 @@ public:
   _bstr_t operator+(const _bstr_t &s) const;
   friend _bstr_t operator+(const char *s1, const _bstr_t &s2);
   friend _bstr_t operator+(const wchar_t *s1, const _bstr_t &s2);
-  friend std::ostream& operator<<(std::ostream& os, const _bstr_t& dt);
+  friend std::ostream &operator<<(std::ostream &os, const _bstr_t &dt);
   operator const wchar_t *() const throw();
   operator wchar_t *() const throw();
   operator const char *() const;
@@ -282,7 +288,8 @@ inline _bstr_t operator+(const wchar_t *s1, const _bstr_t &s2)
   return b;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const _bstr_t& s) {
+inline std::ostream &operator<<(std::ostream &os, const _bstr_t &s)
+{
   os << static_cast<const char *>(s);
   return os;
 }
