@@ -7,6 +7,7 @@ set(PALRT_SOURCES
     guid.cpp
     memorystream.cpp
     variant.cpp
+    winapi.cpp
 )
 
 add_library(palrt

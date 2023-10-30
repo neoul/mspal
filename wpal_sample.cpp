@@ -44,7 +44,9 @@
 
 int main()
 {
+
     std::cout << "BSTR" << " " << sizeof(BSTR) << std::endl; // 8
+    std::cout << "tagDEC" << " " << sizeof(tagDEC) << std::endl; // 1
     std::cout << "wchar_t" << " " << sizeof(wchar_t) << std::endl; // 8
     std::cout << sizeof(long) << std::endl; // 8
     std::cout << sizeof(int) << std::endl; // 4

@@ -513,6 +513,15 @@ STDAPI_(HRESULT) VariantChangeType(
   IN  VARTYPE          vt
 );
 
+STDAPI_(BSTR) SysAllocString(const OLECHAR *psz);
+STDAPI_(BSTR) SysAllocStringLen(const OLECHAR *strIn, UINT ui);
+STDAPI_(BSTR) SysAllocStringByteLen(LPCSTR psz, UINT len);
+STDAPI_(void) SysFreeString(BSTR bstrString);
+STDAPI_(UINT) SysStringLen(BSTR pbstr);
+STDAPI_(UINT) SysStringByteLen(BSTR pbstr);
+STDAPI_(HLOCAL) LocalAlloc(UINT uFlags, SIZE_T uBytes);
+STDAPI_(HLOCAL) LocalFree(HLOCAL hMem);
+
 #define V_VT(X)         ((X)->n1.n2.vt)
 #define V_UNION(X, Y)   ((X)->n1.n2.n3.Y)
 #define V_RECORDINFO(X) ((X)->n1.n2.n3.brecVal.pRecInfo)
