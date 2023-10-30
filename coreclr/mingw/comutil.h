@@ -5,8 +5,9 @@
  */
 #ifndef _INC_COMUTIL
 #define _INC_COMUTIL
-#include <stdlib.h>
-#include <pal.h>
+#include <cstdlib>
+#include <iostream>
+// #include <pal.h>
 #include <palrt.h>
 #include <mingw.h> // It is needed to overwrite some definitions.
 
@@ -112,6 +113,7 @@ public:
   _bstr_t operator+(const _bstr_t &s) const;
   friend _bstr_t operator+(const char *s1, const _bstr_t &s2);
   friend _bstr_t operator+(const wchar_t *s1, const _bstr_t &s2);
+  friend std::ostream& operator<<(std::ostream& os, const _bstr_t& dt);
   operator const wchar_t *() const throw();
   operator wchar_t *() const throw();
   operator const char *() const;
@@ -152,7 +154,7 @@ private:
     void Attach(BSTR s) throw();
     unsigned int Length() const throw();
     int Compare(const Data_t &str) const throw();
-    void *operator new(size_t sz);
+    // void *operator new(size_t sz);
 
   private:
     BSTR m_wstr;
@@ -278,6 +280,11 @@ inline _bstr_t operator+(const wchar_t *s1, const _bstr_t &s2)
   _bstr_t b = s1;
   b += s2;
   return b;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const _bstr_t& s) {
+  os << static_cast<const char *>(s);
+  return os;
 }
 
 inline _bstr_t::operator const wchar_t *() const throw() { return (m_Data != NULL) ? m_Data->GetWString() : NULL; }
@@ -506,24 +513,24 @@ inline int _bstr_t::Data_t::Compare(const _bstr_t::Data_t &str) const throw()
                                      : 1;
 }
 
-#ifdef _COM_OPERATOR_NEW_THROWS
-inline void *_bstr_t::Data_t::operator new(size_t sz)
-{
-  try
-  {
-    return ::operator new(sz);
-  }
-  catch (...)
-  {
-    return NULL;
-  }
-}
-#else
-inline void *_bstr_t::Data_t::operator new(size_t sz)
-{
-  return ::operator new(sz);
-}
-#endif
+// #ifdef _COM_OPERATOR_NEW_THROWS
+// inline void *_bstr_t::Data_t::operator new(size_t sz)
+// {
+//   try
+//   {
+//     return ::operator new(sz);
+//   }
+//   catch (...)
+//   {
+//     return NULL;
+//   }
+// }
+// #else
+// inline void *_bstr_t::Data_t::operator new(size_t sz)
+// {
+//   return ::operator new(sz);
+// }
+// #endif
 
 inline _bstr_t::Data_t::~Data_t() throw() { _Free(); }
 inline void _bstr_t::Data_t::_Free() throw()

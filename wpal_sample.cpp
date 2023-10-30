@@ -35,12 +35,14 @@
 
 // using namespace std;
 
-// void use_bstr_t() {
-//     _bstr_t bstr1("Hello");
-//     _bstr_t bstr2("World");
-//     _bstr_t bstr3 = bstr1 + bstr2;
-//     cout << bstr3 << endl;
-// }
+void use_bstr_t() {
+    _bstr_t bstr1("Hello");
+    std::cout << "hello" << std::endl;
+    _bstr_t bstr2("World");
+    std::cout << "world" << std::endl;
+    _bstr_t bstr3 = bstr1 + bstr2;
+    std::cout << bstr3 << std::endl;
+}
 
 int main()
 {
@@ -53,4 +55,5 @@ int main()
     SYSTEMTIME TheTime;
     GetSystemTime(&TheTime);
     std::cout << std::string("Hello, CMake world! ") << std::to_string(TheTime.wYear) << std::endl;
+    use_bstr_t();
 }
