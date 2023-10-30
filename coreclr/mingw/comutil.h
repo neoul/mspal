@@ -445,13 +445,21 @@ inline _bstr_t::Data_t::Data_t(const _bstr_t &s1, const _bstr_t &s2) : m_str(NUL
 
 inline unsigned __LONG32 _bstr_t::Data_t::AddRef() throw()
 {
+#if 0
   InterlockedIncrement(reinterpret_cast<LONG *>(&m_RefCount));
+#else
+  m_RefCount++;
+#endif
   return m_RefCount;
 }
 
 inline unsigned __LONG32 _bstr_t::Data_t::Release() throw()
 {
+#if 0
   unsigned __LONG32 cRef = InterlockedDecrement(reinterpret_cast<LONG *>(&m_RefCount));
+#else
+  unsigned __LONG32 cRef = --m_RefCount;
+#endif
   if (cRef == 0)
     delete this;
   return cRef;
