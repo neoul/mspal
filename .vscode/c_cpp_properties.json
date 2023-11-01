@@ -3,8 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
-                "${workspaceFolder}/build/_deps/poco-src/Foundation/include",
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/build/_deps/poco-src/Foundation/include"
             ],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",

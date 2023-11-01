@@ -171,6 +171,8 @@ if(NOT CLR_CMAKE_HOST_MACCATALYST AND NOT CLR_CMAKE_HOST_IOS AND NOT CLR_CMAKE_H
   # endif(CLR_CMAKE_HOST_WIN32)
 endif(NOT CLR_CMAKE_HOST_MACCATALYST AND NOT CLR_CMAKE_HOST_IOS AND NOT CLR_CMAKE_HOST_TVOS)
 
+find_package(ODBC REQUIRED)
+
 add_compile_definitions(SQL_WCHART_CONVERT)
 include(FetchContent)
 FetchContent_Declare(
@@ -194,8 +196,8 @@ file(GLOB wpal_sources mingw/*.h mingw/*.cpp)
 add_library(wpal STATIC ${wpal_sources})
 target_sources(wpal PUBLIC mingw/wpal.h)
 # target_compile_definitions(wpal PUBLIC -DSQL_WCHART_CONVERT)
-add_dependencies(wpal Poco::Foundation)
-target_include_directories(wpal PUBLIC mingw Poco::Foundation)
+add_dependencies(wpal Poco::Data Poco::DataODBC Poco::Foundation)
+target_include_directories(wpal PUBLIC mingw Poco::Data Poco::DataODBC Poco::Foundation)
 target_compile_options(wpal PUBLIC -fshort-wchar)
 set_target_properties(wpal PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(wpal PUBLIC Poco::Foundation coreclrpal palrt)
+target_link_libraries(wpal PUBLIC Poco::Data Poco::DataODBC Poco::Foundation coreclrpal palrt)

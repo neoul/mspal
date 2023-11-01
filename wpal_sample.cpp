@@ -21,8 +21,11 @@
 #include <math.h>
 #include <iomanip>
 
-#include <wpal.h>
 #include <Poco/Dynamic/Var.h>
+#include <Poco/Data/Session.h>
+#include <Poco/Data/RecordSet.h>
+#include <Poco/Data/ODBC/Connector.h>
+#include <wpal.h>
 
 using namespace std;
 

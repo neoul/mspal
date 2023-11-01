@@ -26,10 +26,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 project(wpal_sample LANGUAGES CXX)
 
-# set(CMAKE_VERBOSE_MAKEFILE true)
+set(CMAKE_VERBOSE_MAKEFILE true)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_subdirectory(coreclr)
 add_executable(wpal_sample wpal_sample.cpp)
+target_compile_definitions(wpal_sample PUBLIC -DSQL_WCHART_CONVERT)
 target_link_libraries(wpal_sample PUBLIC wpal)
 # message(WARNING "CMAKE_BINARY_DIR/lib = ${CMAKE_BINARY_DIR}/lib")
 # target_link_directories(wpal_sample PUBLIC ${CMAKE_BINARY_DIR}/lib)

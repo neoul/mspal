@@ -236,9 +236,11 @@ typedef long double LONG_DOUBLE;
 typedef void VOID;
 
 typedef int LONG;       // NOTE: diff from windows.h, for LP64 compat
-#ifndef ULONG
-typedef unsigned int ULONG; // NOTE: diff from windows.h, for LP64 compat
-#endif
+typedef unsigned int _ULONG;
+#define ULONG _ULONG
+// #ifndef __SQLTYPES_H
+// typedef unsigned int ULONG; // NOTE: diff from windows.h, for LP64 compat
+// #endif
 
 typedef __int64 LONGLONG;
 typedef unsigned __int64 ULONGLONG;

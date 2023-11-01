@@ -19,5 +19,28 @@
 // #include <fstream>
 // #include <string>
 // #include <math.h>
+
+// #pragma push_macro(CALLBACK)
+// #pragma push_macro(ULONG)
+
+#ifdef CALLBACK
+#undef CALLBACK
+#endif
+
+#ifdef ULONG
+#undef ULONG
+#endif
+
 #include <palrt.h>
 #include <comdef.h>
+
+#ifdef CALLBACK
+#undef CALLBACK
+#endif
+
+#ifdef ULONG
+#undef ULONG
+#endif
+
+// #pragma pop_macro(CALLBACK)
+// #pragma pop_macro(ULONG)
