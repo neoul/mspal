@@ -1542,6 +1542,16 @@ extern _variant_t vtMissing;
 #define variant_t _variant_t
 #endif
 
+#include <Poco/Dynamic/Var.h>
+using namespace Poco::Dynamic;
+void use_var() {
+    // auto v = Var("Hello");
+    Poco::Dynamic::Var var("Hello");
+    std::cout << "var " << var.toString() << std::endl;
+}
+
+
+
 // #pragma pop_macro("new")
 
 /* We use _com_issue_error here, but we only provide its inline version in comdef.h,

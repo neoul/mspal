@@ -4,6 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**"
+                "${workspaceFolder}/build/_deps/poco-src/Foundation/include",
             ],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
@@ -71,7 +72,6 @@
                 "-Wimplicit-fallthrough",
                 "-Wno-invalid-offsetof",
                 "-Wno-unused-but-set-variable",
-                "-fno-rtti",
                 "-Wno-uninitialized",
                 "-Wno-strict-aliasing",
                 "-Wno-array-bounds",

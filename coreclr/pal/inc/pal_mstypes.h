@@ -236,7 +236,9 @@ typedef long double LONG_DOUBLE;
 typedef void VOID;
 
 typedef int LONG;       // NOTE: diff from windows.h, for LP64 compat
+#ifndef ULONG
 typedef unsigned int ULONG; // NOTE: diff from windows.h, for LP64 compat
+#endif
 
 typedef __int64 LONGLONG;
 typedef unsigned __int64 ULONGLONG;
@@ -258,7 +260,9 @@ typedef ULONGLONG DWORDLONG;
 typedef unsigned int DWORD; // NOTE: diff from  windows.h, for LP64 compat
 typedef unsigned int DWORD32, *PDWORD32;
 
+#ifndef BOOL
 typedef int BOOL;
+#endif
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef float FLOAT;
