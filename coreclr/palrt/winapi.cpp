@@ -7,14 +7,14 @@ BSTR SysAllocString(const OLECHAR *psz)
   if (psz == NULL)
     return NULL;
 
-  size_t len = PAL_wcslen(psz);
+  size_t len = wcslen(psz);
   size_t total = (len + 1) * sizeof(WCHAR) + sizeof(UINT);
   UINT *ptr = (UINT *)malloc(total);
   if (ptr)
   {
     ptr[0] = len;
     ptr++;
-    PAL_wcscpy((WCHAR *)ptr, psz);
+    wcscpy((WCHAR *)ptr, psz);
   }
   return (BSTR)ptr;
 }
@@ -30,9 +30,9 @@ BSTR SysAllocStringLen(const OLECHAR *strIn, UINT ui)
     ptr++;
     if (strIn != NULL)
     {
-      size_t len = PAL_wcslen(strIn);
+      size_t len = wcslen(strIn);
       size_t min = len < ui ? len : ui;
-      PAL_wcsncpy((WCHAR *)ptr, strIn, min);
+      wcsncpy((WCHAR *)ptr, strIn, min);
     }
   }
   return (BSTR)ptr;
