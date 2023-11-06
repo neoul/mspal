@@ -14,7 +14,7 @@ BSTR SysAllocString(const OLECHAR *psz)
   {
     ptr[0] = len;
     ptr++;
-    wcscpy((WCHAR *)ptr, psz);
+    wcscpy_s((WCHAR *)ptr, len, psz);
   }
   return (BSTR)ptr;
 }
@@ -32,7 +32,8 @@ BSTR SysAllocStringLen(const OLECHAR *strIn, UINT ui)
     {
       size_t len = wcslen(strIn);
       size_t min = len < ui ? len : ui;
-      wcsncpy((WCHAR *)ptr, strIn, min);
+      // wcsncpy((WCHAR *)ptr, strIn, min);
+      wcscpy_s((WCHAR *)ptr, min, strIn);
     }
   }
   return (BSTR)ptr;

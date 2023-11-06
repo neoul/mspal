@@ -9,6 +9,8 @@
 #include <iostream>
 #include <codecvt>
 #include <string>
+#include <typeinfo>
+#include <locale>
 
 // #include <pal.h>
 #include <palrt.h>
@@ -16,6 +18,10 @@
 
 #include <ole2.h>
 #include <stdio.h>
+
+#include <Poco/Dynamic/Var.h>
+using namespace Poco::Dynamic;
+using namespace std;
 
 #ifndef _COM_ASSERT
 #define _COM_ASSERT(x) ((void)0)
@@ -63,7 +69,6 @@ namespace _com_util
     }
   }
 
-  // it will convert utf8 (multi-bytes characters) to utf16 or utf32 depends on sizeof(wchar_t)
   BSTR ConvertStringToBSTR(const char *pSrc)
   {
     if (pSrc == NULL)
@@ -290,7 +295,8 @@ inline _bstr_t operator+(const wchar_t *s1, const _bstr_t &s2)
 
 inline std::ostream &operator<<(std::ostream &os, const _bstr_t &s)
 {
-  os << static_cast<const char *>(s);
+  auto temp_s = static_cast<const char *>(s);
+  os << temp_s;
   return os;
 }
 
@@ -553,29 +559,29 @@ inline void _bstr_t::Data_t::_Free() throw()
   if (m_wstr != NULL)
     ::SysFreeString(m_wstr);
   if (m_str != NULL)
-    delete[] m_str;
+    free(m_str);
 }
 
 class _variant_t : public ::tagVARIANT
 {
 public:
   _variant_t() throw();
-  _variant_t(const VARIANT &varSrc);
-  _variant_t(const VARIANT *pSrc);
+  // _variant_t(const VARIANT &varSrc);
+  // _variant_t(const VARIANT *pSrc);
   _variant_t(const _variant_t &varSrc);
-  _variant_t(VARIANT &varSrc, bool fCopy);
+  // _variant_t(VARIANT &varSrc, bool fCopy);
   _variant_t(short sSrc, VARTYPE vtSrc = VT_I2);
   _variant_t(__LONG32 lSrc, VARTYPE vtSrc = VT_I4);
   _variant_t(float fltSrc) throw();
   _variant_t(double dblSrc, VARTYPE vtSrc = VT_R8);
-  _variant_t(const CY &cySrc) throw();
+  // _variant_t(const CY &cySrc) throw();
   _variant_t(const _bstr_t &bstrSrc);
   _variant_t(const wchar_t *pSrc);
   _variant_t(const char *pSrc);
   // _variant_t(IDispatch *pSrc, bool fAddRef = true) throw();
   _variant_t(bool boolSrc) throw();
   // _variant_t(IUnknown *pSrc, bool fAddRef = true) throw();
-  _variant_t(const DECIMAL &decSrc) throw();
+  // _variant_t(const DECIMAL &decSrc) throw();
   _variant_t(BYTE bSrc) throw();
   _variant_t(char cSrc) throw();
   _variant_t(unsigned short usSrc) throw();
@@ -591,12 +597,12 @@ public:
   operator __LONG32() const;
   operator float() const;
   operator double() const;
-  operator CY() const;
+  // operator CY() const;
   operator _bstr_t() const;
   // operator IDispatch *() const;
   operator bool() const;
-  operator IUnknown *() const;
-  operator DECIMAL() const;
+  // operator IUnknown *() const;
+  // operator DECIMAL() const;
   operator BYTE() const;
   // operator VARIANT() const throw();
   operator char() const;
@@ -608,21 +614,21 @@ public:
 #endif
   __MINGW_EXTENSION operator __int64() const;
   __MINGW_EXTENSION operator unsigned __int64() const;
-  _variant_t &operator=(const VARIANT &varSrc);
-  _variant_t &operator=(const VARIANT *pSrc);
+  // _variant_t &operator=(const VARIANT &varSrc);
+  // _variant_t &operator=(const VARIANT *pSrc);
   _variant_t &operator=(const _variant_t &varSrc);
   _variant_t &operator=(short sSrc);
   _variant_t &operator=(__LONG32 lSrc);
   _variant_t &operator=(float fltSrc);
   _variant_t &operator=(double dblSrc);
-  _variant_t &operator=(const CY &cySrc);
+  // _variant_t &operator=(const CY &cySrc);
   _variant_t &operator=(const _bstr_t &bstrSrc);
   _variant_t &operator=(const wchar_t *pSrc);
   _variant_t &operator=(const char *pSrc);
   // _variant_t &operator=(IDispatch *pSrc);
   _variant_t &operator=(bool boolSrc);
   // _variant_t &operator=(IUnknown *pSrc);
-  _variant_t &operator=(const DECIMAL &decSrc);
+  // _variant_t &operator=(const DECIMAL &decSrc);
   _variant_t &operator=(BYTE bSrc);
   _variant_t &operator=(char cSrc);
   _variant_t &operator=(unsigned short usSrc);
@@ -633,10 +639,10 @@ public:
 #endif
   __MINGW_EXTENSION _variant_t &operator=(__int64 i8Src);
   __MINGW_EXTENSION _variant_t &operator=(unsigned __int64 ui8Src);
-  bool operator==(const VARIANT &varSrc) const throw();
-  bool operator==(const VARIANT *pSrc) const throw();
-  bool operator!=(const VARIANT &varSrc) const throw();
-  bool operator!=(const VARIANT *pSrc) const throw();
+  // bool operator==(const VARIANT &varSrc) const throw();
+  // bool operator==(const VARIANT *pSrc) const throw();
+  // bool operator!=(const VARIANT &varSrc) const throw();
+  // bool operator!=(const VARIANT *pSrc) const throw();
   void Clear();
   void Attach(VARIANT &varSrc);
   VARIANT Detach();
@@ -647,41 +653,41 @@ public:
 };
 
 inline _variant_t::_variant_t() throw() { ::VariantInit(this); }
-inline _variant_t::_variant_t(const VARIANT &varSrc)
-{
-  ::VariantInit(this);
-  _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(&varSrc)));
-}
-inline _variant_t::_variant_t(const VARIANT *pSrc)
-{
-  if (!pSrc)
-  {
-    _com_issue_error(E_POINTER);
-  }
-  else
-  {
-    ::VariantInit(this);
-    _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(pSrc)));
-  }
-}
+// inline _variant_t::_variant_t(const VARIANT &varSrc)
+// {
+//   ::VariantInit(this);
+//   _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(&varSrc)));
+// }
+// inline _variant_t::_variant_t(const VARIANT *pSrc)
+// {
+//   if (!pSrc)
+//   {
+//     _com_issue_error(E_POINTER);
+//   }
+//   else
+//   {
+//     ::VariantInit(this);
+//     _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(pSrc)));
+//   }
+// }
 inline _variant_t::_variant_t(const _variant_t &varSrc)
 {
   ::VariantInit(this);
   _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(static_cast<const VARIANT *>(&varSrc))));
 }
-inline _variant_t::_variant_t(VARIANT &varSrc, bool fCopy)
-{
-  if (fCopy)
-  {
-    ::VariantInit(this);
-    _com_util::CheckError(::VariantCopy(this, &varSrc));
-  }
-  else
-  {
-    _COM_MEMCPY_S(this, sizeof(varSrc), &varSrc, sizeof(varSrc));
-    V_VT(&varSrc) = VT_EMPTY;
-  }
-}
+// inline _variant_t::_variant_t(VARIANT &varSrc, bool fCopy)
+// {
+//   if (fCopy)
+//   {
+//     ::VariantInit(this);
+//     _com_util::CheckError(::VariantCopy(this, &varSrc));
+//   }
+//   else
+//   {
+//     _COM_MEMCPY_S(this, sizeof(varSrc), &varSrc, sizeof(varSrc));
+//     V_VT(&varSrc) = VT_EMPTY;
+//   }
+// }
 inline _variant_t::_variant_t(short sSrc, VARTYPE vtSrc)
 {
   if ((vtSrc != VT_I2) && (vtSrc != VT_BOOL))
@@ -747,11 +753,11 @@ inline _variant_t::_variant_t(double dblSrc, VARTYPE vtSrc)
     V_R8(this) = dblSrc;
   }
 }
-inline _variant_t::_variant_t(const CY &cySrc) throw()
-{
-  V_VT(this) = VT_CY;
-  V_CY(this) = cySrc;
-}
+// inline _variant_t::_variant_t(const CY &cySrc) throw()
+// {
+//   V_VT(this) = VT_CY;
+//   V_CY(this) = cySrc;
+// }
 inline _variant_t::_variant_t(const _bstr_t &bstrSrc)
 {
   V_VT(this) = VT_BSTR;
@@ -800,11 +806,11 @@ inline _variant_t::_variant_t(bool boolSrc) throw()
 //   if (fAddRef && V_UNKNOWN(this) != NULL)
 //     V_UNKNOWN(this)->AddRef();
 // }
-inline _variant_t::_variant_t(const DECIMAL &decSrc) throw()
-{
-  V_DECIMAL(this) = decSrc;
-  V_VT(this) = VT_DECIMAL;
-}
+// inline _variant_t::_variant_t(const DECIMAL &decSrc) throw()
+// {
+//   V_DECIMAL(this) = decSrc;
+//   V_VT(this) = VT_DECIMAL;
+// }
 inline _variant_t::_variant_t(BYTE bSrc) throw()
 {
   V_VT(this) = VT_UI1;
@@ -882,14 +888,14 @@ inline _variant_t::operator double() const
   return V_R8(&varDest);
 }
 
-inline _variant_t::operator CY() const
-{
-  if (V_VT(this) == VT_CY)
-    return V_CY(this);
-  _variant_t varDest;
-  varDest.ChangeType(VT_CY, this);
-  return V_CY(&varDest);
-}
+// inline _variant_t::operator CY() const
+// {
+//   if (V_VT(this) == VT_CY)
+//     return V_CY(this);
+//   _variant_t varDest;
+//   varDest.ChangeType(VT_CY, this);
+//   return V_CY(&varDest);
+// }
 
 inline _variant_t::operator _bstr_t() const
 {
@@ -923,28 +929,28 @@ inline _variant_t::operator bool() const
   return (V_BOOL(&varDest) == VARIANT_TRUE) ? true : false;
 }
 
-inline _variant_t::operator IUnknown *() const
-{
-  if (V_VT(this) == VT_UNKNOWN)
-  {
-    if (V_UNKNOWN(this) != NULL)
-      V_UNKNOWN(this)->AddRef();
-    return V_UNKNOWN(this);
-  }
-  _variant_t varDest;
-  varDest.ChangeType(VT_UNKNOWN, this);
-  if (V_UNKNOWN(&varDest) != NULL)
-    V_UNKNOWN(&varDest)->AddRef();
-  return V_UNKNOWN(&varDest);
-}
-inline _variant_t::operator DECIMAL() const
-{
-  if (V_VT(this) == VT_DECIMAL)
-    return V_DECIMAL(this);
-  _variant_t varDest;
-  varDest.ChangeType(VT_DECIMAL, this);
-  return V_DECIMAL(&varDest);
-}
+// inline _variant_t::operator IUnknown *() const
+// {
+//   if (V_VT(this) == VT_UNKNOWN)
+//   {
+//     if (V_UNKNOWN(this) != NULL)
+//       V_UNKNOWN(this)->AddRef();
+//     return V_UNKNOWN(this);
+//   }
+//   _variant_t varDest;
+//   varDest.ChangeType(VT_UNKNOWN, this);
+//   if (V_UNKNOWN(&varDest) != NULL)
+//     V_UNKNOWN(&varDest)->AddRef();
+//   return V_UNKNOWN(&varDest);
+// }
+// inline _variant_t::operator DECIMAL() const
+// {
+//   if (V_VT(this) == VT_DECIMAL)
+//     return V_DECIMAL(this);
+//   _variant_t varDest;
+//   varDest.ChangeType(VT_DECIMAL, this);
+//   return V_DECIMAL(&varDest);
+// }
 inline _variant_t::operator BYTE() const
 {
   if (V_VT(this) == VT_UI1)
@@ -1014,23 +1020,23 @@ __MINGW_EXTENSION inline _variant_t::operator unsigned __int64() const
   varDest.ChangeType(VT_UI8, this);
   return V_UI8(&varDest);
 }
-inline _variant_t &_variant_t::operator=(const VARIANT &varSrc)
-{
-  _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(&varSrc)));
-  return *this;
-}
-inline _variant_t &_variant_t::operator=(const VARIANT *pSrc)
-{
-  if (!pSrc)
-  {
-    _com_issue_error(E_POINTER);
-  }
-  else
-  {
-    _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(pSrc)));
-  }
-  return *this;
-}
+// inline _variant_t &_variant_t::operator=(const VARIANT &varSrc)
+// {
+//   _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(&varSrc)));
+//   return *this;
+// }
+// inline _variant_t &_variant_t::operator=(const VARIANT *pSrc)
+// {
+//   if (!pSrc)
+//   {
+//     _com_issue_error(E_POINTER);
+//   }
+//   else
+//   {
+//     _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(pSrc)));
+//   }
+//   return *this;
+// }
 inline _variant_t &_variant_t::operator=(const _variant_t &varSrc)
 {
   _com_util::CheckError(::VariantCopy(this, const_cast<VARIANT *>(static_cast<const VARIANT *>(&varSrc))));
@@ -1099,20 +1105,20 @@ inline _variant_t &_variant_t::operator=(double dblSrc)
   return *this;
 }
 
-inline _variant_t &_variant_t::operator=(const CY &cySrc)
-{
-  if (V_VT(this) != VT_CY)
-  {
+// inline _variant_t &_variant_t::operator=(const CY &cySrc)
+// {
+//   if (V_VT(this) != VT_CY)
+//   {
 
-    Clear();
+//     Clear();
 
-    V_VT(this) = VT_CY;
-  }
+//     V_VT(this) = VT_CY;
+//   }
 
-  V_CY(this) = cySrc;
+//   V_CY(this) = cySrc;
 
-  return *this;
-}
+//   return *this;
+// }
 
 inline _variant_t &_variant_t::operator=(const _bstr_t &bstrSrc)
 {
@@ -1227,19 +1233,19 @@ inline _variant_t &_variant_t::operator=(bool boolSrc)
 //   return *this;
 // }
 
-inline _variant_t &_variant_t::operator=(const DECIMAL &decSrc)
-{
-  if (V_VT(this) != VT_DECIMAL)
-  {
+// inline _variant_t &_variant_t::operator=(const DECIMAL &decSrc)
+// {
+//   if (V_VT(this) != VT_DECIMAL)
+//   {
 
-    Clear();
-  }
+//     Clear();
+//   }
 
-  V_DECIMAL(this) = decSrc;
-  V_VT(this) = VT_DECIMAL;
+//   V_DECIMAL(this) = decSrc;
+//   V_VT(this) = VT_DECIMAL;
 
-  return *this;
-}
+//   return *this;
+// }
 
 inline _variant_t &_variant_t::operator=(BYTE bSrc)
 {
@@ -1362,111 +1368,111 @@ __MINGW_EXTENSION inline _variant_t &_variant_t::operator=(unsigned __int64 ui8S
   return *this;
 }
 
-inline bool _variant_t::operator==(const VARIANT &varSrc) const throw()
-{
-  return *this == &varSrc;
-}
+// inline bool _variant_t::operator==(const VARIANT &varSrc) const throw()
+// {
+//   return *this == &varSrc;
+// }
 
-inline bool _variant_t::operator==(const VARIANT *pSrc) const throw()
-{
-  if (!pSrc)
-  {
-    return false;
-  }
+// inline bool _variant_t::operator==(const VARIANT *pSrc) const throw()
+// {
+//   if (!pSrc)
+//   {
+//     return false;
+//   }
 
-  if (this == pSrc)
-  {
-    return true;
-  }
+//   if (this == pSrc)
+//   {
+//     return true;
+//   }
 
-  if (V_VT(this) != V_VT(pSrc))
-  {
-    return false;
-  }
+//   if (V_VT(this) != V_VT(pSrc))
+//   {
+//     return false;
+//   }
 
-  switch (V_VT(this))
-  {
-  case VT_EMPTY:
-  case VT_NULL:
-    return true;
+//   switch (V_VT(this))
+//   {
+//   case VT_EMPTY:
+//   case VT_NULL:
+//     return true;
 
-  case VT_I2:
-    return V_I2(this) == V_I2(pSrc);
+//   case VT_I2:
+//     return V_I2(this) == V_I2(pSrc);
 
-  case VT_I4:
-    return V_I4(this) == V_I4(pSrc);
+//   case VT_I4:
+//     return V_I4(this) == V_I4(pSrc);
 
-  case VT_R4:
-    return V_R4(this) == V_R4(pSrc);
+//   case VT_R4:
+//     return V_R4(this) == V_R4(pSrc);
 
-  case VT_R8:
-    return V_R8(this) == V_R8(pSrc);
+//   case VT_R8:
+//     return V_R8(this) == V_R8(pSrc);
 
-  case VT_CY:
-    return memcmp(&(V_CY(this)), &(V_CY(pSrc)), sizeof(CY)) == 0;
+//   case VT_CY:
+//     return memcmp(&(V_CY(this)), &(V_CY(pSrc)), sizeof(CY)) == 0;
 
-  case VT_DATE:
-    return V_DATE(this) == V_DATE(pSrc);
+//   case VT_DATE:
+//     return V_DATE(this) == V_DATE(pSrc);
 
-  case VT_BSTR:
-    return (::SysStringByteLen(V_BSTR(this)) == ::SysStringByteLen(V_BSTR(pSrc))) &&
-           (memcmp(V_BSTR(this), V_BSTR(pSrc), ::SysStringByteLen(V_BSTR(this))) == 0);
+//   case VT_BSTR:
+//     return (::SysStringByteLen(V_BSTR(this)) == ::SysStringByteLen(V_BSTR(pSrc))) &&
+//            (memcmp(V_BSTR(this), V_BSTR(pSrc), ::SysStringByteLen(V_BSTR(this))) == 0);
 
-  case VT_DISPATCH:
-    return V_DISPATCH(this) == V_DISPATCH(pSrc);
+//   case VT_DISPATCH:
+//     return V_DISPATCH(this) == V_DISPATCH(pSrc);
 
-  case VT_ERROR:
-    return V_ERROR(this) == V_ERROR(pSrc);
+//   case VT_ERROR:
+//     return V_ERROR(this) == V_ERROR(pSrc);
 
-  case VT_BOOL:
-    return V_BOOL(this) == V_BOOL(pSrc);
+//   case VT_BOOL:
+//     return V_BOOL(this) == V_BOOL(pSrc);
 
-  case VT_UNKNOWN:
-    return V_UNKNOWN(this) == V_UNKNOWN(pSrc);
+//   case VT_UNKNOWN:
+//     return V_UNKNOWN(this) == V_UNKNOWN(pSrc);
 
-  case VT_DECIMAL:
-    return memcmp(&(V_DECIMAL(this)), &(V_DECIMAL(pSrc)), sizeof(DECIMAL)) == 0;
+//   case VT_DECIMAL:
+//     return memcmp(&(V_DECIMAL(this)), &(V_DECIMAL(pSrc)), sizeof(DECIMAL)) == 0;
 
-  case VT_UI1:
-    return V_UI1(this) == V_UI1(pSrc);
+//   case VT_UI1:
+//     return V_UI1(this) == V_UI1(pSrc);
 
-  case VT_I1:
-    return V_I1(this) == V_I1(pSrc);
+//   case VT_I1:
+//     return V_I1(this) == V_I1(pSrc);
 
-  case VT_UI2:
-    return V_UI2(this) == V_UI2(pSrc);
+//   case VT_UI2:
+//     return V_UI2(this) == V_UI2(pSrc);
 
-  case VT_UI4:
-    return V_UI4(this) == V_UI4(pSrc);
+//   case VT_UI4:
+//     return V_UI4(this) == V_UI4(pSrc);
 
-  case VT_INT:
-    return V_INT(this) == V_INT(pSrc);
+//   case VT_INT:
+//     return V_INT(this) == V_INT(pSrc);
 
-  case VT_UINT:
-    return V_UINT(this) == V_UINT(pSrc);
+//   case VT_UINT:
+//     return V_UINT(this) == V_UINT(pSrc);
 
-  case VT_I8:
-    return V_I8(this) == V_I8(pSrc);
+//   case VT_I8:
+//     return V_I8(this) == V_I8(pSrc);
 
-  case VT_UI8:
-    return V_UI8(this) == V_UI8(pSrc);
+//   case VT_UI8:
+//     return V_UI8(this) == V_UI8(pSrc);
 
-  default:
-    _com_issue_error(E_INVALIDARG);
-  }
+//   default:
+//     _com_issue_error(E_INVALIDARG);
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
-inline bool _variant_t::operator!=(const VARIANT &varSrc) const throw()
-{
-  return !(*this == &varSrc);
-}
+// inline bool _variant_t::operator!=(const VARIANT &varSrc) const throw()
+// {
+//   return !(*this == &varSrc);
+// }
 
-inline bool _variant_t::operator!=(const VARIANT *pSrc) const throw()
-{
-  return !(*this == pSrc);
-}
+// inline bool _variant_t::operator!=(const VARIANT *pSrc) const throw()
+// {
+//   return !(*this == pSrc);
+// }
 
 inline void _variant_t::Clear()
 {
@@ -1542,8 +1548,6 @@ extern _variant_t vtMissing;
 #define variant_t _variant_t
 #endif
 
-#include <Poco/Dynamic/Var.h>
-using namespace Poco::Dynamic;
 void use_var() {
     // auto v = Var("Hello");
     Poco::Dynamic::Var var("Hello");

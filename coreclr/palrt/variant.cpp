@@ -116,13 +116,14 @@ STDAPI_(HRESULT) VariantCopy(
         return E_INVALIDARG;
     }
     if (V_VT(pvargSrc) == VT_EMPTY) {
+        VariantClear(pvargDest);
         return S_OK;
     }
-    VariantClear(pvargDest);
     switch (V_VT(pvargSrc)) {
         case VT_EMPTY:
             return VariantClear(pvargDest);
         case VT_BSTR: {
+            VariantClear(pvargDest);
             BSTR s = V_BSTR(pvargSrc);
             size_t blen =  SysStringByteLen(s);
             BSTR d = SysAllocStringByteLen((LPCSTR)s, blen);

@@ -64,6 +64,9 @@
     "streambuf": "cpp",
     "thread": "cpp",
     "typeinfo": "cpp",
-    "utf8.h": "c"
+    "utf8.h": "c",
+    "codecvt": "cpp",
+    "iomanip": "cpp",
+    "cfenv": "cpp"
   }
 }
