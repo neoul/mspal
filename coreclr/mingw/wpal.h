@@ -30,7 +30,6 @@
 #ifdef ULONG
 #undef ULONG
 #endif
-
 #include <palrt.h>
 #include <comdef.h>
 
