@@ -69,12 +69,12 @@ int main()
     std::cout << "var 2" << var.toString() << std::endl;
 
     _variant_t v1("안녕");
-    const std::string s = v1;
+    std::string s = std::string(v1);
     std::cout << "s " << s << std::endl;
     // std::wcout << "v1 " << static_cast<const wchar_t *>(v1) << std::endl;
 
     _variant_t v2(s);
-    std::cout << "v2 " << static_cast<std::string>(v2) << std::endl;
+    std::cout << "v2 " << std::string(v2) << std::endl;
     _variant_t v3(L"안녕하세요 wchar to string");
     std::cout << "v3 " << static_cast<std::string>(v3) << std::endl;
     v3 = L"안녕!";
@@ -98,21 +98,10 @@ int main()
     std::cout << "v6 " << static_cast<std::string>(v6) << std::endl;
 
     _variant_t v7 = 15;
-    std::cout << "v7 " << static_cast<int>(v7) << std::endl;
+    std::cout << "v7 " << int(v7) << std::endl;
 
     _variant_t v8 = Var(0.314);
-    std::cout << "v8 " << static_cast<double>(v8) << std::endl;
+    std::cout << "v8 " << double(v8) << std::endl;
     // _variant_t v3 = v1 + v2;
     // cout << "v3 " << v3.toString() << endl;
-
-    std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> cvt;
-    // UTF-8 to UTF-16
-    // UTF-16은 locale에 따라 다르게 동작...
-    std::u16string utf16 = cvt.from_bytes("한글");
-    std::cout << "UTF-16 string size: " << utf16.size() << '\n';
-    std::cout << "converted() == " << cvt.converted() << '\n';
-    // UTF-16 to UTF-8
-    auto _utf8 = cvt.to_bytes(utf16);
-    std::cout << "new UTF-8 string size: " << _utf8.size() << '\n';
-    std::cout << "converted() == " << cvt.converted() << '\n';
 }

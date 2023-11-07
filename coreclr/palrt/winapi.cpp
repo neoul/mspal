@@ -33,7 +33,7 @@ BSTR SysAllocStringLen(const OLECHAR *strIn, UINT ui)
       size_t len = wcslen(strIn);
       size_t min = len < ui ? len : ui;
       // wcsncpy((WCHAR *)ptr, strIn, min);
-      wcscpy_s((WCHAR *)ptr, min, strIn);
+      wcsncpy((WCHAR *)ptr, strIn, min);
     }
   }
   return (BSTR)ptr;

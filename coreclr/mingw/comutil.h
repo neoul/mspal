@@ -656,23 +656,35 @@ public:
   }
 
   template <typename T>
-  operator T() const
+  explicit operator T() const
   {
-    return v;
+    try
+    {
+      return v.extract<T>();
+    }
+    catch (...)
+    {
+      return v.convert<T>();
+    }
   }
-  operator const wchar_t *() throw()
+
+  explicit operator std::string() throw()
+  {
+    return getString();
+  }
+  explicit operator const wchar_t *() throw()
   {
 
     if (wcs == nullptr)
     {
-      auto vstr = static_cast<std::string>(v);
+      auto vstr = getString();
       wcs = allocate_wchars_from_string(vstr);
     }
     return wcs;
   }
-  operator const char *() throw()
+  explicit operator const char *() throw()
   {
-    auto vstr = static_cast<std::string>(v);
+    auto vstr = getString();
     if (cs == nullptr)
     {
       cs = new char[vstr.size() + 1];
@@ -681,17 +693,30 @@ public:
     return cs;
   }
 
-  std::string toString() const
-  {
-    return static_cast<std::string>(v);
-  }
-
   std::wstring toWString() const
   {
-    auto val = static_cast<std::string>(v);
+    auto val = getString();
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     auto wval = converter.from_bytes(val);
     return wval;
+  }
+
+  template <typename T>
+  T value() const
+  {
+    try
+    {
+      return v.extract<T>();
+    }
+    catch (...)
+    {
+      return v.convert<T>();
+    }
+  }
+
+  std::string toString() const
+  {
+    return getString();
   }
 
 private:
@@ -712,12 +737,23 @@ private:
       cs = nullptr;
     }
   }
+
+  std::string getString() const
+  {
+    try
+    {
+      return v.extract<std::string>();
+    }
+    catch (...)
+    {
+      return v.convert<std::string>();
+    }
+  }
 };
 
 inline _bstr_t::_bstr_t(const ::_variant_t &var)
 {
-  // auto cstr = var.toString();
-  auto cstr = static_cast<std::string>(var);
+  auto cstr = var.toString();
   m_Data = new Data_t(cstr.c_str());
   if (!m_Data)
   {
@@ -727,7 +763,8 @@ inline _bstr_t::_bstr_t(const ::_variant_t &var)
 
 inline _bstr_t &_bstr_t::operator=(const _variant_t &var)
 {
-  std::string cstr = static_cast<std::string>(var);
+
+  std::string cstr = var.value<std::string>();
   m_Data = new Data_t(cstr.c_str());
   return *this;
 }
