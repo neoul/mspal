@@ -1,27 +1,29 @@
 #include "common.h"
+// #include <cwchar>
 
 // BSTR format:
-// [4 bytes (length prefix)], wchar_t[length], L'\0'[\0]
+// [4 bytes (length prefix)], wchar_t[length], wchar_t L'\0'[\0]
+// SysString need more space for _SAFECRT__FILL_STRING
 BSTR SysAllocString(const OLECHAR *psz)
 {
   if (psz == NULL)
     return NULL;
 
   size_t len = wcslen(psz);
-  size_t total = (len + 1) * sizeof(WCHAR) + sizeof(UINT);
+  size_t total = (len + 2) * sizeof(WCHAR) + sizeof(UINT);
   UINT *ptr = (UINT *)malloc(total);
   if (ptr)
   {
     ptr[0] = len;
     ptr++;
-    wcscpy_s((WCHAR *)ptr, len, psz);
+    wcscpy_s((WCHAR *)ptr, len+1, psz);
   }
   return (BSTR)ptr;
 }
 
 BSTR SysAllocStringLen(const OLECHAR *strIn, UINT ui)
 {
-  size_t total = (ui + 1) * sizeof(WCHAR) + sizeof(UINT);
+  size_t total = (ui + 2) * sizeof(WCHAR) + sizeof(UINT);
   UINT *ptr = (UINT *)malloc(total);
   if (ptr)
   {
@@ -33,7 +35,7 @@ BSTR SysAllocStringLen(const OLECHAR *strIn, UINT ui)
       size_t len = wcslen(strIn);
       size_t min = len < ui ? len : ui;
       // wcsncpy((WCHAR *)ptr, strIn, min);
-      wcsncpy((WCHAR *)ptr, strIn, min);
+      wcsncpy((WCHAR *)ptr, strIn, min + 1);
     }
   }
   return (BSTR)ptr;
@@ -43,7 +45,7 @@ BSTR SysAllocStringLen(const OLECHAR *strIn, UINT ui)
 // [FIXME] minipal_get_length_utf8_to_utf16, MultiByteToWideChar
 BSTR SysAllocStringByteLen(LPCSTR psz, UINT len)
 {
-  size_t total = len + sizeof(OLECHAR) + sizeof(UINT);
+  size_t total = (len + 1) + sizeof(OLECHAR) + sizeof(UINT);
   UINT *ptr = (UINT *)malloc(total);
   if (ptr)
   {
@@ -51,7 +53,7 @@ BSTR SysAllocStringByteLen(LPCSTR psz, UINT len)
     ptr[0] = len;
     ptr++;
     if (psz != NULL)
-      strncpy((char *)ptr, psz, len);
+      strncpy((char *)ptr, psz, len + 1);
   }
   return (BSTR)ptr;
 }
@@ -90,7 +92,7 @@ UINT SysStringByteLen(BSTR pbstr)
 
 HLOCAL LocalAlloc(UINT uFlags, SIZE_T uBytes)
 {
-  return malloc(uBytes);
+  return malloc(uBytes + 4);
 }
 
 HLOCAL LocalFree(HLOCAL hMem)
