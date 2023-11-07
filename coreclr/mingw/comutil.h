@@ -618,6 +618,7 @@ public:
   }
   _variant_t(const Poco::Dynamic::Var &var) : v(var) {}
   _variant_t(const _variant_t &var) : v(var.v) {}
+  _variant_t() : v() {}
   ~_variant_t()
   {
     _free();
@@ -626,32 +627,37 @@ public:
   template <typename T>
   _variant_t &operator=(const T &other)
   {
-    v.clear();
+    _free();
     v = other;
     return *this;
   }
   _variant_t &operator=(const char *pVal)
   {
+    _free();
     v = pVal;
     return *this;
   }
   _variant_t &operator=(const wchar_t *pVal)
   {
+    _free();
     v = convert_wchars_to_string(pVal);
     return *this;
   }
   _variant_t &operator=(const _bstr_t &bstrSrc)
   {
+    _free();
     v = static_cast<const char *>(bstrSrc);
     return *this;
   }
   _variant_t &operator=(const Poco::Dynamic::Var &other)
   {
+    _free();
     v = other;
     return *this;
   }
   _variant_t &operator=(const _variant_t &other)
   {
+    _free();
     v = other.v;
     return *this;
   }
@@ -659,6 +665,8 @@ public:
   template <typename T>
   explicit operator T() const
   {
+    if (v.isEmpty())
+      return T();
     try
     {
       return v.extract<T>();
@@ -675,7 +683,6 @@ public:
   }
   explicit operator const wchar_t *() throw()
   {
-
     if (wcs == nullptr)
     {
       auto vstr = getString();
@@ -705,6 +712,8 @@ public:
   template <typename T>
   T value() const
   {
+    if (v.isEmpty())
+      return T();
     try
     {
       return v.extract<T>();
@@ -720,7 +729,8 @@ public:
     return getString();
   }
 
-  void clear() {
+  void clear()
+  {
     _free();
   }
 
@@ -746,6 +756,8 @@ private:
 
   std::string getString() const
   {
+    if (v.isEmpty())
+      return std::string();
     try
     {
       return v.extract<std::string>();

@@ -108,8 +108,17 @@ int main()
      std::cout << "int = int(v8) " << i << std::endl;
 
      v8.clear();
+     std::cout << "clear " << double(v8) << std::endl;
      v8 = 0.314;
-     // std::cout << "v8 " << double(v8) << std::endl;
+     std::cout << "reassign " << double(v8) << std::endl;
+
+     _variant_t default_value;
+     std::cout << "_variant_t default_value " << std::endl;
+     std::cout << "default_value string " << std::string(default_value) << std::endl;
+     std::cout << "default_value int " << int(default_value) << std::endl;
+     std::cout << "default_value bool " << bool(default_value) << std::endl;
+     std::cout << "default_value float " << float(default_value) << std::endl;
+     std::cout << "default_value unsigned int " << (unsigned int)(default_value) << std::endl;
      // _variant_t v3 = v1 + v2;
      // cout << "v3 " << v3.toString() << endl;
 }
