@@ -734,6 +734,17 @@ public:
     _free();
   }
 
+  bool isEmpty() const
+  {
+    return v.isEmpty();
+  }
+
+  Poco::Dynamic::Var var()
+  {
+    Poco::Dynamic::Var out = v;
+    return out;
+  }
+
 private:
   Poco::Dynamic::Var v;
   const wchar_t *wcs = nullptr;

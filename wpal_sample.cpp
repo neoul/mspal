@@ -119,6 +119,9 @@ int main()
      std::cout << "default_value bool " << bool(default_value) << std::endl;
      std::cout << "default_value float " << float(default_value) << std::endl;
      std::cout << "default_value unsigned int " << (unsigned int)(default_value) << std::endl;
+
+     Var v = v8.var();
+     std::cout << "v " << v.toString() << std::endl;
      // _variant_t v3 = v1 + v2;
      // cout << "v3 " << v3.toString() << endl;
 }
