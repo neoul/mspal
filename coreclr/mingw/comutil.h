@@ -626,7 +626,8 @@ public:
   template <typename T>
   _variant_t &operator=(const T &other)
   {
-    construct(other);
+    v.clear();
+    v = other;
     return *this;
   }
   _variant_t &operator=(const char *pVal)
@@ -719,6 +720,10 @@ public:
     return getString();
   }
 
+  void clear() {
+    _free();
+  }
+
 private:
   Poco::Dynamic::Var v;
   const wchar_t *wcs = nullptr;
@@ -726,6 +731,7 @@ private:
 
   void _free()
   {
+    v.clear();
     if (wcs != nullptr)
     {
       free((void *)wcs);
