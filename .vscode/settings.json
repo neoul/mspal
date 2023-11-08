@@ -67,6 +67,12 @@
     "utf8.h": "c",
     "codecvt": "cpp",
     "iomanip": "cpp",
-    "cfenv": "cpp"
+    "cfenv": "cpp",
+    "complex": "cpp",
+    "optional": "cpp",
+    "ranges": "cpp",
+    "shared_mutex": "cpp",
+    "typeindex": "cpp",
+    "variant": "cpp"
   }
 }

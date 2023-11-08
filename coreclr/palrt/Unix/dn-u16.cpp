@@ -1,12 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-typedef char16_t WCHAR;
-
 #include <dn-u16.h>
 #include <string.h>
 
-size_t u16_strlen(const WCHAR* str)
+size_t u16_strlen(const char16_t* str)
 {
     size_t nChar = 0;
     while (*str++)
@@ -14,12 +12,12 @@ size_t u16_strlen(const WCHAR* str)
     return nChar;
 }
 
-int u16_strcmp(const WCHAR* str1, const WCHAR* str2)
+int u16_strcmp(const char16_t* str1, const char16_t* str2)
 {
     return u16_strncmp(str1, str2, 0x7fffffff);
 }
 
-int u16_strncmp(const WCHAR* str1, const WCHAR* str2, size_t count)
+int u16_strncmp(const char16_t* str1, const char16_t* str2, size_t count)
 {
     int diff = 0;
     for (size_t i = 0; i < count; i++)
@@ -29,21 +27,21 @@ int u16_strncmp(const WCHAR* str1, const WCHAR* str2, size_t count)
             break;
 
         // stop if we reach the end of the string
-        if(str1[i] == (WCHAR)'\0')
+        if(str1[i] == (char16_t)'\0')
             break;
     }
     return diff;
 }
 
-WCHAR* u16_strcat_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
+char16_t* u16_strcat_s(char16_t* dst, size_t dstLen, const char16_t* src)
 {
     if (dst == nullptr || src == nullptr)
     {
         return nullptr;
     }
 
-    WCHAR* start = dst;
-    WCHAR* end = dst + dstLen;
+    char16_t* start = dst;
+    char16_t* end = dst + dstLen;
 
     // find end of source string
     while (*dst)
@@ -65,19 +63,19 @@ WCHAR* u16_strcat_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
     }
 
     // add terminating null
-    *dst = (WCHAR)'\0';
+    *dst = (char16_t)'\0';
     return start;
 }
 
-WCHAR* u16_strcpy_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
+char16_t* u16_strcpy_s(char16_t* dst, size_t dstLen, const char16_t* src)
 {
     if (dst == nullptr || src == nullptr)
     {
         return nullptr;
     }
 
-    WCHAR* start = dst;
-    WCHAR* end = dst + dstLen;
+    char16_t* start = dst;
+    char16_t* end = dst + dstLen;
 
     // copy source string to destination string
     while (*src)
@@ -88,24 +86,24 @@ WCHAR* u16_strcpy_s(WCHAR* dst, size_t dstLen, const WCHAR* src)
     }
 
     // add terminating null
-    *dst = (WCHAR)'\0';
+    *dst = (char16_t)'\0';
     return start;
 }
 
-WCHAR* u16_strncpy_s(WCHAR* dst, size_t dstLen, const WCHAR* src, size_t count)
+char16_t* u16_strncpy_s(char16_t* dst, size_t dstLen, const char16_t* src, size_t count)
 {
-    ::memset(dst, 0, dstLen * sizeof(WCHAR));
+    ::memset(dst, 0, dstLen * sizeof(char16_t));
 
     size_t srcLength = u16_strlen(src);
     size_t length = (count < srcLength) ? count : srcLength;
     if (length > dstLen)
         return nullptr;
 
-    ::memcpy(dst, src, length * sizeof(WCHAR));
+    ::memcpy(dst, src, length * sizeof(char16_t));
     return dst;
 }
 
-const WCHAR* u16_strstr(const WCHAR *str, const WCHAR *strCharSet)
+const char16_t* u16_strstr(const char16_t *str, const char16_t *strCharSet)
 {
     if (str == nullptr || strCharSet == nullptr)
     {
@@ -116,19 +114,19 @@ const WCHAR* u16_strstr(const WCHAR *str, const WCHAR *strCharSet)
     if (u16_strlen(strCharSet) == 0)
         return str;
 
-    const WCHAR* ret = nullptr;
+    const char16_t* ret = nullptr;
     int i;
-    while (*str != (WCHAR)'\0')
+    while (*str != (char16_t)'\0')
     {
         i = 0;
         while (true)
         {
-            if (*(strCharSet + i) == (WCHAR)'\0')
+            if (*(strCharSet + i) == (char16_t)'\0')
             {
                 ret = str;
                 goto LEAVE;
             }
-            else if (*(str + i) == (WCHAR)'\0')
+            else if (*(str + i) == (char16_t)'\0')
             {
                 ret = nullptr;
                 goto LEAVE;
@@ -145,7 +143,7 @@ const WCHAR* u16_strstr(const WCHAR *str, const WCHAR *strCharSet)
     return ret;
 }
 
-const WCHAR* u16_strchr(const WCHAR* str, WCHAR ch)
+const char16_t* u16_strchr(const char16_t* str, char16_t ch)
 {
     while (*str)
     {
@@ -161,9 +159,9 @@ const WCHAR* u16_strchr(const WCHAR* str, WCHAR ch)
     return nullptr;
 }
 
-const WCHAR* u16_strrchr(const WCHAR* str, WCHAR ch)
+const char16_t* u16_strrchr(const char16_t* str, char16_t ch)
 {
-    const WCHAR* last = nullptr;
+    const char16_t* last = nullptr;
     while (*str)
     {
         if (*str == ch)
@@ -175,21 +173,21 @@ const WCHAR* u16_strrchr(const WCHAR* str, WCHAR ch)
 }
 
 // Forward declare PAL function
-extern "C" uint32_t PAL_wcstoul(const WCHAR* nptr, WCHAR** endptr, int base);
-extern "C" uint64_t PAL__wcstoui64(const WCHAR* nptr, WCHAR** endptr, int base);
-extern "C" double PAL_wcstod(const WCHAR* nptr, WCHAR** endptr);
+extern "C" uint32_t PAL_wcstoul(const char16_t* nptr, char16_t** endptr, int base);
+extern "C" uint64_t PAL__wcstoui64(const char16_t* nptr, char16_t** endptr, int base);
+extern "C" double PAL_wcstod(const char16_t* nptr, char16_t** endptr);
 
-uint32_t u16_strtoul(const WCHAR* nptr, WCHAR** endptr, int base)
+uint32_t u16_strtoul(const char16_t* nptr, char16_t** endptr, int base)
 {
     return PAL_wcstoul(nptr, endptr, base);
 }
 
-uint64_t u16_strtoui64(const WCHAR* nptr, WCHAR** endptr, int base)
+uint64_t u16_strtoui64(const char16_t* nptr, char16_t** endptr, int base)
 {
     return PAL__wcstoui64(nptr, endptr, base);
 }
 
-double u16_strtod(const WCHAR* nptr, WCHAR** endptr)
+double u16_strtod(const char16_t* nptr, char16_t** endptr)
 {
     return PAL_wcstod(nptr, endptr);
 }

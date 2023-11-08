@@ -1,22 +1,27 @@
 #include "common.h"
-// #include <cwchar>
+#include <string>
+#include <locale>
+#include <codecvt>
+#include <dn-u16.h>
 
 // BSTR format:
 // [4 bytes (length prefix)], wchar_t[length], wchar_t L'\0'[\0]
 // SysString need more space for _SAFECRT__FILL_STRING
+#if defined(WCHAR_4BYTES)
+#else
 BSTR SysAllocString(const OLECHAR *psz)
 {
   if (psz == NULL)
     return NULL;
 
-  size_t len = wcslen(psz);
+  size_t len = u16_strlen(psz);
   size_t total = (len + 2) * sizeof(WCHAR) + sizeof(UINT);
   UINT *ptr = (UINT *)malloc(total);
   if (ptr)
   {
     ptr[0] = len;
     ptr++;
-    wcscpy_s((WCHAR *)ptr, len+1, psz);
+    u16_strcpy_s((WCHAR *)ptr, len+1, psz);
   }
   return (BSTR)ptr;
 }
@@ -32,10 +37,9 @@ BSTR SysAllocStringLen(const OLECHAR *strIn, UINT ui)
     ptr++;
     if (strIn != NULL)
     {
-      size_t len = wcslen(strIn);
+      size_t len = u16_strlen(strIn);
       size_t min = len < ui ? len : ui;
-      // wcsncpy((WCHAR *)ptr, strIn, min);
-      wcsncpy((WCHAR *)ptr, strIn, min + 1);
+      u16_strcpy_s((WCHAR *)ptr, min + 1, strIn);
     }
   }
   return (BSTR)ptr;
@@ -89,6 +93,7 @@ UINT SysStringByteLen(BSTR pbstr)
   UINT byteLen = len * sizeof(OLECHAR);
   return byteLen;
 }
+#endif
 
 HLOCAL LocalAlloc(UINT uFlags, SIZE_T uBytes)
 {

@@ -594,7 +594,14 @@ typedef LONG_PTR LPARAM;
 #define _PTRDIFF_T
 #endif
 
-typedef wchar_t WCHAR;
+#ifndef WCHAR_4BYTES
+typedef char16_t _WCHAR;
+#else
+typedef char32_t _WCHAR;
+#endif
+#ifndef __SQLTYPES_H
+typedef _WCHAR WCHAR;
+#endif
 
 #ifndef PAL_STDCPP_COMPAT
 

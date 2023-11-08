@@ -19,7 +19,11 @@
 
 #include "mbusafecrt_internal.h"
 
-DLLEXPORT errno_t __cdecl _wcslwr_s(WCHAR *string, size_t sz)
+#if defined(WCHAR_4BYTES)
+DLLEXPORT errno_t __cdecl _wcslwr_s(char32_t *string, size_t sz)
+#else
+DLLEXPORT errno_t __cdecl _wcslwr_s(char16_t *string, size_t sz)
+#endif
 {
     _VALIDATE_RETURN_ERRCODE(string != NULL, EINVAL);
     size_t length = PAL_wcsnlen(string, sz);
@@ -30,7 +34,12 @@ DLLEXPORT errno_t __cdecl _wcslwr_s(WCHAR *string, size_t sz)
 
     for (int i = 0; string[i] != 0; i++)
     {
-        string[i] = (WCHAR)towlower(string[i]);
+#if defined(WCHAR_4BYTES)
+DLLEXPORT errno_t __cdecl _wcslwr_s(char32_t *string, size_t sz)
+        string[i] = (char32_t)towlower(string[i]);
+#else
+        string[i] = (char16_t)towlower(string[i]);
+#endif
     }
 
     _FILL_STRING(string, sz, length + 1);

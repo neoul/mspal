@@ -10,8 +10,16 @@ set(PALRT_SOURCES
     winapi.cpp
 )
 
+if (CLR_CMAKE_HOST_UNIX)
+  set(U16_LIB Unix/dn-u16.cpp)
+else (CLR_CMAKE_HOST_UNIX)
+  set(U16_LIB Windows/dn-u16.cpp)
+endif (CLR_CMAKE_HOST_UNIX)
+
 add_library(palrt STATIC
     ${PALRT_SOURCES}
+    dn-u16.h
+    ${U16_LIB}
 )
 
 if (CLR_CMAKE_HOST_ARCH_AMD64)

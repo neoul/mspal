@@ -74,21 +74,21 @@ public:
   _bstr_t() throw();
   _bstr_t(const _bstr_t &s) throw();
   _bstr_t(const char *s);
-  _bstr_t(const wchar_t *s);
+  _bstr_t(const WCHAR *s);
   _bstr_t(const ::_variant_t &var);
   _bstr_t(BSTR bstr, bool fCopy);
   ~_bstr_t() throw();
   _bstr_t &operator=(const _bstr_t &s) throw();
   _bstr_t &operator=(const char *s);
-  _bstr_t &operator=(const wchar_t *s);
+  _bstr_t &operator=(const WCHAR *s);
   _bstr_t &operator=(const _variant_t &var);
   _bstr_t &operator+=(const _bstr_t &s);
   _bstr_t operator+(const _bstr_t &s) const;
   friend _bstr_t operator+(const char *s1, const _bstr_t &s2);
-  friend _bstr_t operator+(const wchar_t *s1, const _bstr_t &s2);
+  friend _bstr_t operator+(const WCHAR *s1, const _bstr_t &s2);
   friend std::ostream &operator<<(std::ostream &os, const _bstr_t &dt);
-  operator const wchar_t *() const throw();
-  operator wchar_t *() const throw();
+  operator const WCHAR *() const throw();
+  operator WCHAR *() const throw();
   operator const char *() const;
   operator char *() const;
   bool operator!() const throw();
@@ -111,16 +111,16 @@ private:
   {
   public:
     Data_t(const char *s);
-    Data_t(const wchar_t *s);
+    Data_t(const WCHAR *s);
     Data_t(BSTR bstr, bool fCopy);
     Data_t(const _bstr_t &s1, const _bstr_t &s2);
     unsigned __LONG32 AddRef() throw();
     unsigned __LONG32 Release() throw();
     unsigned __LONG32 RefCount() const throw();
-    operator const wchar_t *() const throw();
+    operator const WCHAR *() const throw();
     operator const char *() const;
-    const wchar_t *GetWString() const throw();
-    wchar_t *&GetWString() throw();
+    const WCHAR *GetWString() const throw();
+    WCHAR *&GetWString() throw();
     const char *GetString() const;
     BSTR Copy() const;
     void Assign(BSTR s);
@@ -160,7 +160,7 @@ inline _bstr_t::_bstr_t(const char *s) : m_Data(new Data_t(s))
   }
 }
 
-inline _bstr_t::_bstr_t(const wchar_t *s) : m_Data(new Data_t(s))
+inline _bstr_t::_bstr_t(const WCHAR *s) : m_Data(new Data_t(s))
 {
   if (!m_Data)
   {
@@ -204,10 +204,10 @@ inline _bstr_t &_bstr_t::operator=(const char *s)
   return *this;
 }
 
-inline _bstr_t &_bstr_t::operator=(const wchar_t *s)
+inline _bstr_t &_bstr_t::operator=(const WCHAR *s)
 {
-  _COM_ASSERT(!s || static_cast<const wchar_t *>(*this) != s);
-  if (!s || static_cast<const wchar_t *>(*this) != s)
+  _COM_ASSERT(!s || static_cast<const WCHAR *>(*this) != s);
+  if (!s || static_cast<const WCHAR *>(*this) != s)
   {
     _Free();
     m_Data = new Data_t(s);
@@ -248,7 +248,7 @@ inline _bstr_t operator+(const char *s1, const _bstr_t &s2)
   return b;
 }
 
-inline _bstr_t operator+(const wchar_t *s1, const _bstr_t &s2)
+inline _bstr_t operator+(const WCHAR *s1, const _bstr_t &s2)
 {
   _bstr_t b = s1;
   b += s2;
@@ -262,8 +262,8 @@ inline std::ostream &operator<<(std::ostream &os, const _bstr_t &s)
   return os;
 }
 
-inline _bstr_t::operator const wchar_t *() const throw() { return (m_Data != NULL) ? m_Data->GetWString() : NULL; }
-inline _bstr_t::operator wchar_t *() const throw() { return const_cast<wchar_t *>((m_Data != NULL) ? m_Data->GetWString() : NULL); }
+inline _bstr_t::operator const WCHAR *() const throw() { return (m_Data != NULL) ? m_Data->GetWString() : NULL; }
+inline _bstr_t::operator WCHAR *() const throw() { return const_cast<WCHAR *>((m_Data != NULL) ? m_Data->GetWString() : NULL); }
 inline _bstr_t::operator const char *() const { return (m_Data != NULL) ? m_Data->GetString() : NULL; }
 inline _bstr_t::operator char *() const { return const_cast<char *>((m_Data != NULL) ? m_Data->GetString() : NULL); }
 inline bool _bstr_t::operator!() const throw() { return (m_Data != NULL) ? !m_Data->GetWString() : true; }
@@ -366,7 +366,7 @@ inline _bstr_t::Data_t::Data_t(const char *s) : m_str(NULL), m_RefCount(1)
   m_wstr = _com_util::ConvertStringToBSTR(s);
 }
 
-inline _bstr_t::Data_t::Data_t(const wchar_t *s) : m_str(NULL), m_RefCount(1)
+inline _bstr_t::Data_t::Data_t(const WCHAR *s) : m_str(NULL), m_RefCount(1)
 {
   m_wstr = ::SysAllocString(s);
   if (!m_wstr && s != NULL)
@@ -399,12 +399,12 @@ inline _bstr_t::Data_t::Data_t(const _bstr_t &s1, const _bstr_t &s2) : m_str(NUL
     _com_issue_error(E_OUTOFMEMORY);
     return;
   }
-  const wchar_t *wstr1 = static_cast<const wchar_t *>(s1);
+  const WCHAR *wstr1 = static_cast<const WCHAR *>(s1);
   if (wstr1 != NULL)
   {
     _COM_MEMCPY_S(m_wstr, (l1 + l2 + 1) * sizeof(wchar_t), wstr1, (l1 + 1) * sizeof(wchar_t));
   }
-  const wchar_t *wstr2 = static_cast<const wchar_t *>(s2);
+  const WCHAR *wstr2 = static_cast<const WCHAR *>(s2);
   if (wstr2 != NULL)
   {
     _COM_MEMCPY_S(m_wstr + l1, (l2 + 1) * sizeof(wchar_t), wstr2, (l2 + 1) * sizeof(wchar_t));
@@ -434,10 +434,10 @@ inline unsigned __LONG32 _bstr_t::Data_t::Release() throw()
 }
 
 inline unsigned __LONG32 _bstr_t::Data_t::RefCount() const throw() { return m_RefCount; }
-inline _bstr_t::Data_t::operator const wchar_t *() const throw() { return m_wstr; }
+inline _bstr_t::Data_t::operator const WCHAR *() const throw() { return m_wstr; }
 inline _bstr_t::Data_t::operator const char *() const { return GetString(); }
-inline const wchar_t *_bstr_t::Data_t::GetWString() const throw() { return m_wstr; }
-inline wchar_t *&_bstr_t::Data_t::GetWString() throw() { return m_wstr; }
+inline const WCHAR *_bstr_t::Data_t::GetWString() const throw() { return m_wstr; }
+inline WCHAR *&_bstr_t::Data_t::GetWString() throw() { return m_wstr; }
 inline const char *_bstr_t::Data_t::GetString() const
 {
   if (!m_str)

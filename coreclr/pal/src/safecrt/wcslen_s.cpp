@@ -40,7 +40,12 @@
 *Exceptions:
 *
 *******************************************************************************/
-size_t __cdecl PAL_wcsnlen(const WCHAR *wcs, size_t maxsize)
+
+#if defined(WCHAR_4BYTES)
+size_t __cdecl PAL_wcsnlen(const char32_t *wcs, size_t maxsize)
+#else
+size_t __cdecl PAL_wcsnlen(const char16_t *wcs, size_t maxsize)
+#endif
 {
     size_t n;
 

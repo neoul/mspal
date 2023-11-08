@@ -104,7 +104,7 @@ endif()
 #   add_subdirectory(debug/debug-pal)
 # endif()
 
-add_subdirectory(minipal)
+# add_subdirectory(minipal)
 
 if(CLR_CMAKE_TARGET_WIN32)
   add_subdirectory(gc/sample)
@@ -142,7 +142,7 @@ include_directories("classlibnative/bcltype")
 include_directories("classlibnative/inc")
 include_directories("${GENERATED_INCLUDE_DIR}")
 include_directories("hosts/inc")
-include_directories("minipal")
+# include_directories("minipal")
 
 if(NOT CLR_CMAKE_HOST_MACCATALYST AND NOT CLR_CMAKE_HOST_IOS AND NOT CLR_CMAKE_HOST_TVOS)
   # add_subdirectory(utilcode)
@@ -173,7 +173,7 @@ endif(NOT CLR_CMAKE_HOST_MACCATALYST AND NOT CLR_CMAKE_HOST_IOS AND NOT CLR_CMAK
 
 find_package(ODBC REQUIRED)
 
-add_compile_definitions(SQL_WCHART_CONVERT)
+# add_compile_definitions(SQL_WCHART_CONVERT)
 include(FetchContent)
 FetchContent_Declare(
   Poco
@@ -188,7 +188,7 @@ if(NOT poco_POPULATED)
   # set(SQL_WCHART_CONVERT ON)
   
   add_subdirectory(${poco_SOURCE_DIR} ${poco_BINARY_DIR} EXCLUDE_FROM_ALL)
-  set_property(DIRECTORY ${poco_SOURCE_DIR} APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS SQL_WCHART_CONVERT)
+  # set_property(DIRECTORY ${poco_SOURCE_DIR} APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS SQL_WCHART_CONVERT)
 endif()
 
 set(CMAKE_VERBOSE_MAKEFILE true)

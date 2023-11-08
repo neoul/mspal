@@ -27,7 +27,11 @@
 
 #define _FUNC_PROLOGUE
 #define _FUNC_NAME wcscat_s
-#define _CHAR wchar_t
+#if defined(WCHAR_4BYTES)
+#define _CHAR char32_t
+#else
+#define _CHAR char16_t
+#endif
 #define _DEST _Dst
 #define _SIZE _SizeInBytes
 #define _SRC _Src
