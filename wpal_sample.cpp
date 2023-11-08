@@ -64,7 +64,7 @@ int main()
      GetSystemTime(&TheTime);
      cout << string("Hello, CMake world! ") << to_string(TheTime.wYear) << endl;
      use_bstr_t();
-     use_var();
+
      Var var("Hello");
      std::cout << "var 2" << var.toString() << std::endl;
 
