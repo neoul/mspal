@@ -7,12 +7,12 @@
 // BSTR format:
 // [4 bytes (length prefix)], wchar_t[length], wchar_t L'\0'[\0]
 // SysString need more space for _SAFECRT__FILL_STRING
-#if defined(WCHAR_4BYTES)
-#else
+// #if __SIZEOF_WCHAR_T__ == 2
+// #else
 BSTR SysAllocString(const OLECHAR *psz)
 {
-  if (psz == NULL)
-    return NULL;
+  if (psz == nullptr)
+    return nullptr;
 
   size_t len = u16_strlen(psz);
   size_t total = (len + 2) * sizeof(WCHAR) + sizeof(UINT);
@@ -35,7 +35,7 @@ BSTR SysAllocStringLen(const OLECHAR *strIn, UINT ui)
     memset(ptr, 0, total);
     ptr[0] = ui;
     ptr++;
-    if (strIn != NULL)
+    if (strIn != nullptr)
     {
       size_t len = u16_strlen(strIn);
       size_t min = len < ui ? len : ui;
@@ -56,7 +56,7 @@ BSTR SysAllocStringByteLen(LPCSTR psz, UINT len)
     memset(ptr, 0, total);
     ptr[0] = len;
     ptr++;
-    if (psz != NULL)
+    if (psz != nullptr)
       strncpy((char *)ptr, psz, len + 1);
   }
   return (BSTR)ptr;
@@ -66,7 +66,7 @@ BSTR SysAllocStringByteLen(LPCSTR psz, UINT len)
 // SysReAllocString, SysAllocStringLen, or SysReAllocStringLen.
 void SysFreeString(BSTR bstrString)
 {
-  if (bstrString != NULL)
+  if (bstrString != nullptr)
   {
     UINT *ptr = (UINT *)bstrString;
     ptr--;
@@ -76,7 +76,7 @@ void SysFreeString(BSTR bstrString)
 
 UINT SysStringLen(BSTR pbstr)
 {
-  if (pbstr == NULL)
+  if (pbstr == nullptr)
     return 0;
 
   UINT *ptr = (UINT *)pbstr;
@@ -86,14 +86,14 @@ UINT SysStringLen(BSTR pbstr)
 
 UINT SysStringByteLen(BSTR pbstr)
 {
-  if (pbstr == NULL)
+  if (pbstr == nullptr)
     return 0;
 
   UINT len = SysStringLen(pbstr);
   UINT byteLen = len * sizeof(OLECHAR);
   return byteLen;
 }
-#endif
+// #endif
 
 HLOCAL LocalAlloc(UINT uFlags, SIZE_T uBytes)
 {
@@ -103,5 +103,5 @@ HLOCAL LocalAlloc(UINT uFlags, SIZE_T uBytes)
 HLOCAL LocalFree(HLOCAL hMem)
 {
   free(hMem);
-  return NULL;
+  return nullptr;
 }

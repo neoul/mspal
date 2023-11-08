@@ -10,14 +10,14 @@
 
 BSTR _com_util::ConvertStringToBSTR(const char *pSrc)
 {
-  if (pSrc == NULL)
-    return NULL;
+  if (pSrc == nullptr)
+    return nullptr;
   std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> cvt2;
   std::u16string utf16 = cvt2.from_bytes(pSrc);
   size_t len = utf16.length();
   size_t total = (len + 1) * sizeof(wchar_t) + sizeof(UINT);
   UINT *ptr = (UINT *)malloc(total);
-  if (ptr != NULL)
+  if (ptr != nullptr)
   {
     ptr[0] = len;
     ptr++;
@@ -36,7 +36,7 @@ char *_com_util::ConvertBSTRToString(BSTR pSrc)
   std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> cvt2;
   auto utf8 = cvt2.to_bytes((char16_t *)pSrc);
   char *p = (char *)malloc(utf8.length() + 1);
-  if (p != NULL)
+  if (p != nullptr)
   {
     strcpy(p, utf8.c_str());
     p[utf8.length()] = '\0';
@@ -84,13 +84,6 @@ const wchar_t *allocate_wchars_from_string(const std::string &str)
     new_ws[len] = 0;
     return reinterpret_cast<const wchar_t *>(new_ws);
   }
-}
-
-void use_var()
-{
-  // auto v = Poco::Dynamic::Var("Hello");
-  Poco::Dynamic::Var var("Hello");
-  std::cout << "var " << var.toString() << std::endl;
 }
 
 #endif /* __cplusplus */
