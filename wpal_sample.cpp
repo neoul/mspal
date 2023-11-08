@@ -47,6 +47,8 @@ void use_bstr_t()
      auto bstr4 = static_cast<const char *>(bstr1);
 }
 
+int use_odbc();
+
 int main()
 {
      setlocale(LC_ALL, "");
@@ -124,4 +126,5 @@ int main()
      std::cout << "v " << v.toString() << std::endl;
      // _variant_t v3 = v1 + v2;
      // cout << "v3 " << v3.toString() << endl;
+     use_odbc();
 }
