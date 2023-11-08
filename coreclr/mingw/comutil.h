@@ -667,6 +667,11 @@ public:
     return v.isEmpty();
   }
 
+  bool isString() const
+  {
+    return v.isString();
+  }
+
   Poco::Dynamic::Var var()
   {
     Poco::Dynamic::Var out = v;
