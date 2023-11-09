@@ -33,12 +33,6 @@ int use_odbc()
         // iterate over all rows and columns
         for (auto it = rs.begin(); it != rs.end(); ++it)
             std::cout << it->get(0).toString() << *it << " ";
-
-        // Access columns by name or index
-        Poco::Dynamic::Var columnValue = rs.row(0).get(0);
-        std::cout << "11?? " << columnValue.toString() << std::endl;
-        Poco::Dynamic::Var columnValue2 = rs["ProfileMarkIcon"];
-        std::cout << "22?? " << columnValue2.toString() << std::endl;
     }
     catch (Poco::Data::DataException &ex)
     {
