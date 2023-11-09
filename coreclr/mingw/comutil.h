@@ -662,6 +662,11 @@ public:
     _free();
   }
 
+  void Clear()
+  {
+    _free();
+  }
+
   bool isEmpty() const
   {
     return v.isEmpty();
