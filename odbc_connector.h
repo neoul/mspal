@@ -4,5 +4,5 @@
 #include <string>
 void registerODBCConnector();
 void unregisterODBCConnector();
-const std::string ODBCKey;
+extern std::string ODBCKey;
 #endif // _POCO_DATA_ODBC_CONNECTOR_H_

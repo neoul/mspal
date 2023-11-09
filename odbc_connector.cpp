@@ -13,5 +13,5 @@ void unregisterODBCConnector()
     Poco::Data::ODBC::Connector::unregisterConnector();
 }
 
-const std::string ODBCKey = Poco::Data::ODBC::Connector::KEY;
+std::string ODBCKey = Poco::Data::ODBC::Connector::KEY;
 #endif // _POCO_DATA_ODBC_CONNECTOR_H_
