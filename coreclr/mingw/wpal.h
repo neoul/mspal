@@ -31,7 +31,7 @@
 #undef ULONG
 #endif
 #include <palrt.h>
-#include <comdef.h>
+#include <comutil.h>
 
 #ifdef CALLBACK
 #undef CALLBACK

@@ -5,6 +5,7 @@
  */
 #ifndef _INC_COMUTIL
 #define _INC_COMUTIL
+#include <stdlib.h>
 #include <cstdlib>
 #include <iostream>
 #include <codecvt>
@@ -47,23 +48,16 @@
 #endif
 #endif
 
-class _com_error;
-
-void WINAPI _com_issue_error(HRESULT);
+#include <Poco/Exception.h>
+typedef Poco::Exception _com_error;
+typedef Poco::OutOfMemoryException _out_of_memory_error;
+typedef Poco::IllegalStateException _illegal_state_error;
 
 class _bstr_t;
 class _variant_t;
 
 namespace _com_util
 {
-  inline void CheckError(HRESULT hr)
-  {
-    if (FAILED(hr))
-    {
-      _com_issue_error(hr);
-    }
-  }
-
   BSTR ConvertStringToBSTR(const char *pSrc);
   char *ConvertBSTRToString(BSTR pSrc);
 }
@@ -148,7 +142,7 @@ private:
   int _Compare(const _bstr_t &str) const throw();
 };
 
-inline _bstr_t::_bstr_t() throw() : m_Data(NULL) {}
+inline _bstr_t::_bstr_t() throw() : m_Data(nullptr) {}
 
 inline _bstr_t::_bstr_t(const _bstr_t &s) throw() : m_Data(s.m_Data) { _AddRef(); }
 
@@ -156,7 +150,7 @@ inline _bstr_t::_bstr_t(const char *s) : m_Data(new Data_t(s))
 {
   if (!m_Data)
   {
-    _com_issue_error(E_OUTOFMEMORY);
+    throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
   }
 }
 
@@ -164,7 +158,7 @@ inline _bstr_t::_bstr_t(const WCHAR *s) : m_Data(new Data_t(s))
 {
   if (!m_Data)
   {
-    _com_issue_error(E_OUTOFMEMORY);
+    throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
   }
 }
 
@@ -172,7 +166,7 @@ inline _bstr_t::_bstr_t(BSTR bstr, bool fCopy) : m_Data(new Data_t(bstr, fCopy))
 {
   if (!m_Data)
   {
-    _com_issue_error(E_OUTOFMEMORY);
+    throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
   }
 }
 
@@ -198,7 +192,7 @@ inline _bstr_t &_bstr_t::operator=(const char *s)
     m_Data = new Data_t(s);
     if (!m_Data)
     {
-      _com_issue_error(E_OUTOFMEMORY);
+      throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
     }
   }
   return *this;
@@ -213,7 +207,7 @@ inline _bstr_t &_bstr_t::operator=(const WCHAR *s)
     m_Data = new Data_t(s);
     if (!m_Data)
     {
-      _com_issue_error(E_OUTOFMEMORY);
+      throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
     }
   }
   return *this;
@@ -224,7 +218,7 @@ inline _bstr_t &_bstr_t::operator+=(const _bstr_t &s)
   Data_t *newData = new Data_t(*this, s);
   if (!newData)
   {
-    _com_issue_error(E_OUTOFMEMORY);
+    throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
   }
   else
   {
@@ -262,19 +256,19 @@ inline std::ostream &operator<<(std::ostream &os, const _bstr_t &s)
   return os;
 }
 
-inline _bstr_t::operator const WCHAR *() const throw() { return (m_Data != NULL) ? m_Data->GetWString() : NULL; }
-inline _bstr_t::operator WCHAR *() const throw() { return const_cast<WCHAR *>((m_Data != NULL) ? m_Data->GetWString() : NULL); }
-inline _bstr_t::operator const char *() const { return (m_Data != NULL) ? m_Data->GetString() : NULL; }
-inline _bstr_t::operator char *() const { return const_cast<char *>((m_Data != NULL) ? m_Data->GetString() : NULL); }
-inline bool _bstr_t::operator!() const throw() { return (m_Data != NULL) ? !m_Data->GetWString() : true; }
+inline _bstr_t::operator const WCHAR *() const throw() { return (m_Data != nullptr) ? m_Data->GetWString() : nullptr; }
+inline _bstr_t::operator WCHAR *() const throw() { return const_cast<WCHAR *>((m_Data != nullptr) ? m_Data->GetWString() : nullptr); }
+inline _bstr_t::operator const char *() const { return (m_Data != nullptr) ? m_Data->GetString() : nullptr; }
+inline _bstr_t::operator char *() const { return const_cast<char *>((m_Data != nullptr) ? m_Data->GetString() : nullptr); }
+inline bool _bstr_t::operator!() const throw() { return (m_Data != nullptr) ? !m_Data->GetWString() : true; }
 inline bool _bstr_t::operator==(const _bstr_t &str) const throw() { return _Compare(str) == 0; }
 inline bool _bstr_t::operator!=(const _bstr_t &str) const throw() { return _Compare(str) != 0; }
 inline bool _bstr_t::operator<(const _bstr_t &str) const throw() { return _Compare(str) < 0; }
 inline bool _bstr_t::operator>(const _bstr_t &str) const throw() { return _Compare(str) > 0; }
 inline bool _bstr_t::operator<=(const _bstr_t &str) const throw() { return _Compare(str) <= 0; }
 inline bool _bstr_t::operator>=(const _bstr_t &str) const throw() { return _Compare(str) >= 0; }
-inline BSTR _bstr_t::copy(bool fCopy) const { return (m_Data != NULL) ? (fCopy ? m_Data->Copy() : m_Data->GetWString()) : NULL; }
-inline unsigned int _bstr_t::length() const throw() { return (m_Data != NULL) ? m_Data->Length() : 0; }
+inline BSTR _bstr_t::copy(bool fCopy) const { return (m_Data != nullptr) ? (fCopy ? m_Data->Copy() : m_Data->GetWString()) : nullptr; }
+inline unsigned int _bstr_t::length() const throw() { return (m_Data != nullptr) ? m_Data->Length() : 0; }
 inline void _bstr_t::Assign(BSTR s)
 {
   _COM_ASSERT(!s || !m_Data || m_Data->GetWString() != s);
@@ -284,7 +278,7 @@ inline void _bstr_t::Assign(BSTR s)
     m_Data = new Data_t(s, TRUE);
     if (!m_Data)
     {
-      _com_issue_error(E_OUTOFMEMORY);
+      throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
     }
   }
 }
@@ -296,7 +290,7 @@ inline BSTR &_bstr_t::GetBSTR()
     m_Data = new Data_t(0, FALSE);
     if (!m_Data)
     {
-      _com_issue_error(E_OUTOFMEMORY);
+      throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
     }
   }
   return m_Data->GetWString();
@@ -314,39 +308,38 @@ inline void _bstr_t::Attach(BSTR s)
   m_Data = new Data_t(s, FALSE);
   if (!m_Data)
   {
-    _com_issue_error(E_OUTOFMEMORY);
+    throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
   }
 }
 
 inline BSTR _bstr_t::Detach() throw()
 {
-  _COM_ASSERT(m_Data != NULL && m_Data->RefCount() == 1);
-  if (m_Data != NULL && m_Data->RefCount() == 1)
+  _COM_ASSERT(m_Data != nullptr && m_Data->RefCount() == 1);
+  if (m_Data != nullptr && m_Data->RefCount() == 1)
   {
     BSTR b = m_Data->GetWString();
-    m_Data->GetWString() = NULL;
+    m_Data->GetWString() = nullptr;
     _Free();
     return b;
   }
   else
   {
-    _com_issue_error(E_POINTER);
-    return NULL;
+    throw _illegal_state_error("Invalid Detach of _bstr_t object");
   }
 }
 
 inline void _bstr_t::_AddRef() throw()
 {
-  if (m_Data != NULL)
+  if (m_Data != nullptr)
     m_Data->AddRef();
 }
 
 inline void _bstr_t::_Free() throw()
 {
-  if (m_Data != NULL)
+  if (m_Data != nullptr)
   {
     m_Data->Release();
-    m_Data = NULL;
+    m_Data = nullptr;
   }
 }
 
@@ -361,51 +354,51 @@ inline int _bstr_t::_Compare(const _bstr_t &str) const throw()
   return m_Data->Compare(*str.m_Data);
 }
 
-inline _bstr_t::Data_t::Data_t(const char *s) : m_str(NULL), m_RefCount(1)
+inline _bstr_t::Data_t::Data_t(const char *s) : m_str(nullptr), m_RefCount(1)
 {
   m_wstr = _com_util::ConvertStringToBSTR(s);
 }
 
-inline _bstr_t::Data_t::Data_t(const WCHAR *s) : m_str(NULL), m_RefCount(1)
+inline _bstr_t::Data_t::Data_t(const WCHAR *s) : m_str(nullptr), m_RefCount(1)
 {
   m_wstr = ::SysAllocString(s);
-  if (!m_wstr && s != NULL)
+  if (!m_wstr && s != nullptr)
   {
-    _com_issue_error(E_OUTOFMEMORY);
+    throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
   }
 }
 
-inline _bstr_t::Data_t::Data_t(BSTR bstr, bool fCopy) : m_str(NULL), m_RefCount(1)
+inline _bstr_t::Data_t::Data_t(BSTR bstr, bool fCopy) : m_str(nullptr), m_RefCount(1)
 {
-  if (fCopy && bstr != NULL)
+  if (fCopy && bstr != nullptr)
   {
     m_wstr = ::SysAllocStringByteLen(reinterpret_cast<char *>(bstr), ::SysStringByteLen(bstr));
     if (!m_wstr)
     {
-      _com_issue_error(E_OUTOFMEMORY);
+      throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
     }
   }
   else
     m_wstr = bstr;
 }
 
-inline _bstr_t::Data_t::Data_t(const _bstr_t &s1, const _bstr_t &s2) : m_str(NULL), m_RefCount(1)
+inline _bstr_t::Data_t::Data_t(const _bstr_t &s1, const _bstr_t &s2) : m_str(nullptr), m_RefCount(1)
 {
   const unsigned int l1 = s1.length();
   const unsigned int l2 = s2.length();
-  m_wstr = ::SysAllocStringByteLen(NULL, (l1 + l2) * sizeof(wchar_t));
+  m_wstr = ::SysAllocStringByteLen(nullptr, (l1 + l2) * sizeof(wchar_t));
   if (!m_wstr)
   {
-    _com_issue_error(E_OUTOFMEMORY);
+    throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
     return;
   }
   const WCHAR *wstr1 = static_cast<const WCHAR *>(s1);
-  if (wstr1 != NULL)
+  if (wstr1 != nullptr)
   {
     _COM_MEMCPY_S(m_wstr, (l1 + l2 + 1) * sizeof(wchar_t), wstr1, (l1 + 1) * sizeof(wchar_t));
   }
   const WCHAR *wstr2 = static_cast<const WCHAR *>(s2);
-  if (wstr2 != NULL)
+  if (wstr2 != nullptr)
   {
     _COM_MEMCPY_S(m_wstr + l1, (l2 + 1) * sizeof(wchar_t), wstr2, (l2 + 1) * sizeof(wchar_t));
   }
@@ -446,21 +439,21 @@ inline const char *_bstr_t::Data_t::GetString() const
 }
 inline BSTR _bstr_t::Data_t::Copy() const
 {
-  if (m_wstr != NULL)
+  if (m_wstr != nullptr)
   {
     BSTR bstr = ::SysAllocStringByteLen(reinterpret_cast<char *>(m_wstr), ::SysStringByteLen(m_wstr));
     if (!bstr)
     {
-      _com_issue_error(E_OUTOFMEMORY);
+      throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
     }
     return bstr;
   }
-  return NULL;
+  return nullptr;
 }
 inline void _bstr_t::Data_t::Assign(BSTR s)
 {
   _Free();
-  if (s != NULL)
+  if (s != nullptr)
   {
     m_wstr = ::SysAllocStringByteLen(reinterpret_cast<char *>(s), ::SysStringByteLen(s));
     m_str = 0;
@@ -505,7 +498,7 @@ inline void *_bstr_t::Data_t::operator new(size_t sz)
   }
   catch (...)
   {
-    return NULL;
+    return nullptr;
   }
 }
 #else
@@ -518,9 +511,9 @@ inline void *_bstr_t::Data_t::operator new(size_t sz)
 inline _bstr_t::Data_t::~Data_t() throw() { _Free(); }
 inline void _bstr_t::Data_t::_Free() throw()
 {
-  if (m_wstr != NULL)
+  if (m_wstr != nullptr)
     ::SysFreeString(m_wstr);
-  if (m_str != NULL)
+  if (m_str != nullptr)
     free(m_str);
 }
 
@@ -724,7 +717,7 @@ inline _bstr_t::_bstr_t(const ::_variant_t &var)
   m_Data = new Data_t(cstr.c_str());
   if (!m_Data)
   {
-    _com_issue_error(E_OUTOFMEMORY);
+    throw _out_of_memory_error("Out of memory" + std::string(__FILE__) + std::to_string(__LINE__));
   }
 }
 
@@ -744,10 +737,6 @@ extern _variant_t vtMissing;
 #endif
 
 // #pragma pop_macro("new")
-
-/* We use _com_issue_error here, but we only provide its inline version in comdef.h,
- * so we need to make sure that it's included as well. */
-#include <comdef.h>
 
 #endif /* __cplusplus */
 

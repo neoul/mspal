@@ -35,6 +35,11 @@
 using namespace std;
 using namespace Poco::Dynamic;
 
+class ComError: public Poco::Exception {
+public:
+    
+};
+
 void use_bstr_t()
 {
 
