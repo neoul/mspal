@@ -170,32 +170,3 @@ if(NOT CLR_CMAKE_HOST_MACCATALYST AND NOT CLR_CMAKE_HOST_IOS AND NOT CLR_CMAKE_H
   #   add_subdirectory(hosts)
   # endif(CLR_CMAKE_HOST_WIN32)
 endif(NOT CLR_CMAKE_HOST_MACCATALYST AND NOT CLR_CMAKE_HOST_IOS AND NOT CLR_CMAKE_HOST_TVOS)
-
-find_package(ODBC REQUIRED)
-
-# add_compile_definitions(SQL_WCHART_CONVERT)
-include(FetchContent)
-FetchContent_Declare(
-  Poco
-  GIT_REPOSITORY "https://github.com/pocoproject/poco.git"
-  GIT_TAG "poco-1.11.8-release"
-)
-# FetchContent_MakeAvailable(Poco)
-FetchContent_GetProperties(Poco)
-if(NOT poco_POPULATED)
-  FetchContent_Populate(Poco)
-  # target_compile_definitions(Poco INTERFACE SQL_WCHART_CONVERT)  
-  # set(SQL_WCHART_CONVERT ON)
-  
-  add_subdirectory(${poco_SOURCE_DIR} ${poco_BINARY_DIR} EXCLUDE_FROM_ALL)
-  # set_property(DIRECTORY ${poco_SOURCE_DIR} APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS SQL_WCHART_CONVERT)
-endif()
-
-set(CMAKE_VERBOSE_MAKEFILE true)
-file(GLOB wpal_sources mingw/*.h mingw/*.cpp)
-add_library(wpal STATIC ${wpal_sources})
-add_dependencies(wpal Poco::Data Poco::DataODBC Poco::Foundation)
-target_include_directories(wpal PUBLIC mingw Poco::Data Poco::DataODBC Poco::Foundation)
-target_compile_options(wpal PUBLIC -fshort-wchar)
-set_target_properties(wpal PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(wpal PUBLIC Poco::Data Poco::DataODBC Poco::Foundation coreclrpal palrt)

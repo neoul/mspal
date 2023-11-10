@@ -221,6 +221,10 @@ add_library(coreclrpal
   ${LIBUNWIND_OBJECTS}
 )
 
+if (SHORT_WCHAR)
+  target_compile_options(coreclrpal PUBLIC -fshort-wchar)
+endif (SHORT_WCHAR)
+
 #------------------------------------
 # Definitions (for platform)
 #-----------------------------------
@@ -254,12 +258,6 @@ endif ()
 
 target_include_directories(coreclrpal PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../native)
 target_include_directories(coreclrpal PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../inc)
-
-get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(dir ${dirs})
-  message(STATUS "dir='${dir}'")
-endforeach()
-
 
 # There is only one function exported in 'tracepointprovider.cpp' namely 'PAL_InitializeTracing',
 # which is guarded with '#if defined(__linux__)'. On macOS, Xcode issues the following warning:

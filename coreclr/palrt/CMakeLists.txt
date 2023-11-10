@@ -22,6 +22,10 @@ add_library(palrt STATIC
     ${U16_LIB}
 )
 
+if (SHORT_WCHAR)
+  target_compile_options(palrt PUBLIC -fshort-wchar)
+endif (SHORT_WCHAR)
+
 if (CLR_CMAKE_HOST_ARCH_AMD64)
   target_compile_definitions(palrt PUBLIC -DHOST_AMD64 -DHOST_64BIT)
 elseif (CLR_CMAKE_HOST_ARCH_I386)
