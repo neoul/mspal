@@ -57,6 +57,10 @@ int use_odbc();
 int main()
 {
      setlocale(LC_ALL, "");
+     std::ios_base::sync_with_stdio(true);
+     
+     // wcout << wstring(L"안녕하세요") << endl;
+
      // cout << "BSTR" << " " << sizeof(BSTR) << endl; // 8
      // cout << "tagDEC" << " " << sizeof(tagDEC) << endl; // 1
      cout << "wchar_t"
@@ -66,6 +70,7 @@ int main()
      cout << "char32_t"
           << " " << sizeof(char32_t) << endl; // 8
      // cout << sizeof(long) << endl; // 8
+
      // cout << sizeof(int) << endl; // 4
      SYSTEMTIME TheTime;
      GetSystemTime(&TheTime);
