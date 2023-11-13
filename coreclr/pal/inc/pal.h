@@ -4090,7 +4090,7 @@ typedef unsigned int wint_t;
 #ifndef PAL_STDCPP_COMPAT
 PALIMPORT void * __cdecl memcpy(void *, const void *, size_t);
 PALIMPORT int    __cdecl memcmp(const void *, const void *, size_t);
-PALIMPORT void * __cdecl memset(void *, int, size_t);
+// PALIMPORT void * __cdecl memset(void *, int, size_t);
 PALIMPORT void * __cdecl memmove(void *, const void *, size_t);
 PALIMPORT void * __cdecl memchr(const void *, int, size_t);
 PALIMPORT long long int __cdecl atoll(const char *) MATH_THROW_DECL;
