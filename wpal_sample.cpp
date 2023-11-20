@@ -32,6 +32,8 @@
 // #include <Poco/Data/ODBC/Connector.h>
 #include <wpal.h>
 
+#include <concurrent_queue.h>
+
 using namespace std;
 using namespace Poco::Dynamic;
 
@@ -137,4 +139,11 @@ int main()
      // _variant_t v3 = v1 + v2;
      // cout << "v3 " << v3.toString() << endl;
      use_odbc();
+
+     concurrency::concurrent_queue<int> q;
+     q.push(1);
+     q.push(2);
+     int value;
+     q.try_pop(value);
+     std::cout << "value " << value << std::endl;
 }

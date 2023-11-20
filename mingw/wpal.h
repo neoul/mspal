@@ -19,6 +19,7 @@
 // #include <fstream>
 // #include <string>
 // #include <math.h>
+#include <mutex>
 
 // #pragma push_macro(CALLBACK)
 // #pragma push_macro(ULONG)
