@@ -31,15 +31,16 @@
 #include <Poco/Data/RecordSet.h>
 // #include <Poco/Data/ODBC/Connector.h>
 #include <wpal.h>
+#include <ini_parser.h>
 
 #include <concurrent_queue.h>
 
 using namespace std;
 using namespace Poco::Dynamic;
 
-class ComError: public Poco::Exception {
+class ComError : public Poco::Exception
+{
 public:
-    
 };
 
 void use_bstr_t()
@@ -58,7 +59,7 @@ int main()
 {
      setlocale(LC_ALL, "");
      std::ios_base::sync_with_stdio(true);
-     
+
      // wcout << wstring(L"안녕하세요") << endl;
 
      // cout << "BSTR" << " " << sizeof(BSTR) << endl; // 8
@@ -136,7 +137,6 @@ int main()
      std::cout << "v " << v.toString() << std::endl;
      // _variant_t v3 = v1 + v2;
      // cout << "v3 " << v3.toString() << endl;
-     use_odbc();
 
      concurrency::concurrent_queue<int> q;
      q.push(1);
@@ -144,4 +144,7 @@ int main()
      int value;
      q.try_pop(value);
      std::cout << "value " << value << std::endl;
+
+     auto resultValue = GetPrivateProfileIntA("qwe", "qq", 0, "qwe");
+     std::cout << "q: " << resultValue << std::endl;
 }
