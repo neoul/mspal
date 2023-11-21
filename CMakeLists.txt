@@ -19,7 +19,7 @@ include(FetchContent)
 FetchContent_Declare(
   poco
   GIT_REPOSITORY "https://github.com/pocoproject/poco.git"
-  GIT_TAG "poco-1.11.8-release"
+  GIT_TAG "poco-1.12.5p1-release"
 )
 FetchContent_GetProperties(poco)
 
