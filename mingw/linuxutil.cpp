@@ -88,6 +88,33 @@ errno_t _itoa_s(int value, char *buffer, size_t size, int radix)
     return 0; // Success
 }
 
+errno_t strcpy_s(char *dest, rsize_t destsz, const char *src)
+{
+    if (dest == NULL || src == NULL)
+    {
+        return EINVAL;
+    }
+    if (destsz == 0 || destsz > RSIZE_MAX)
+    {
+        return ERANGE;
+    }
+
+    while (*src != '\0' && destsz > 1)
+    {
+        *dest++ = *src++;
+        --destsz;
+    }
+
+    if (destsz == 0)
+    {
+        *dest = '\0'; // Null terminate, could be error condition
+        return ERANGE;
+    }
+
+    *dest = '\0'; // Null terminate
+    return 0;
+}
+
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,
     LPCSTR lpKeyName,

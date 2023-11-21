@@ -3,8 +3,14 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <pal_mstypes.h>
+#include <pal.h>
+
+#ifndef RSIZE_MAX
+#define RSIZE_MAX (SIZE_MAX >> 1)
+#endif
 
 typedef int errno_t;
+typedef size_t rsize_t;
 
 typedef struct
 {
@@ -26,6 +32,7 @@ int _findclose(long handle);
 
 time_t _time32(time_t *__timer);
 errno_t _itoa_s(int value, char *buffer, size_t size, int radix);
+errno_t strcpy_s(char *dest, rsize_t destsz, const char *src);
 
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,
