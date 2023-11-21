@@ -115,6 +115,21 @@ errno_t strcpy_s(char *dest, rsize_t destsz, const char *src)
     return 0;
 }
 
+char *_itoa(int value, char *str, int base)
+{
+    if (str == NULL)
+    {
+        return NULL; // str must be a valid pointer
+    }
+    if (base < 2 || base > 36)
+    {
+        return NULL; // base must be between 2 and 36
+    }
+
+    sprintf(str, "%d", value); // For simplicity, using %d for all bases
+    return str;
+}
+
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,
     LPCSTR lpKeyName,

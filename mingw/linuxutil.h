@@ -33,6 +33,7 @@ int _findclose(long handle);
 time_t _time32(time_t *__timer);
 errno_t _itoa_s(int value, char *buffer, size_t size, int radix);
 errno_t strcpy_s(char *dest, rsize_t destsz, const char *src);
+char *_itoa(int value, char *str, int base);
 
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,
