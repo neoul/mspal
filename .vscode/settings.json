@@ -73,6 +73,7 @@
     "ranges": "cpp",
     "shared_mutex": "cpp",
     "typeindex": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "scoped_allocator": "cpp"
   }
 }

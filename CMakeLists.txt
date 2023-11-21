@@ -53,5 +53,5 @@ if(SHORT_WCHAR)
   target_compile_options(palrt PUBLIC -fshort-wchar)
 endif(SHORT_WCHAR)
 
-add_executable(wpal_sample wpal_sample.cpp use_odbc.cpp odbc_connector.h odbc_connector.cpp)
+add_executable(wpal_sample wpal_sample.cpp)
 target_link_libraries(wpal_sample PUBLIC wpal)

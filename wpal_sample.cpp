@@ -54,8 +54,6 @@ void use_bstr_t()
      auto bstr4 = static_cast<const char *>(bstr1);
 }
 
-int use_odbc();
-
 int main()
 {
      setlocale(LC_ALL, "");
