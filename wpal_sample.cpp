@@ -31,7 +31,6 @@
 #include <Poco/Data/RecordSet.h>
 // #include <Poco/Data/ODBC/Connector.h>
 #include <wpal.h>
-#include <ini_parser.h>
 
 #include <concurrent_queue.h>
 
