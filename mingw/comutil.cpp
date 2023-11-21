@@ -5,6 +5,7 @@
  */
 #ifndef _COMUTIL_CPP_
 #define _COMUTIL_CPP_
+#include <mutex>
 #include <comutil.h>
 #ifdef __cplusplus
 
