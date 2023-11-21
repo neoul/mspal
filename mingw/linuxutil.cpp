@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 
 long _findfirst(const char *path, _finddata_t *file)
 {
@@ -57,6 +58,11 @@ int _findclose(long handle)
         free(dhandle);
     }
     return 0;
+}
+
+time_t _time32(time_t *__timer)
+{
+    return time(__timer);
 }
 
 DWORD GetPrivateProfileStringA(

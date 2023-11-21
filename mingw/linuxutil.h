@@ -22,6 +22,8 @@ long _findfirst(const char *path, _finddata_t *file);
 int _findnext(long handle, _finddata_t *file);
 int _findclose(long handle);
 
+time_t _time32(time_t *__timer);
+
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,
     LPCSTR lpKeyName,
