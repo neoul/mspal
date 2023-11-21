@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <errno.h>
 
 long _findfirst(const char *path, _finddata_t *file)
 {
@@ -63,6 +64,28 @@ int _findclose(long handle)
 time_t _time32(time_t *__timer)
 {
     return time(__timer);
+}
+
+errno_t _itoa_s(int value, char *buffer, size_t size, int radix)
+{
+    if (buffer == NULL || size == 0 || radix < 2 || radix > 36)
+    {
+        return EINVAL; // Invalid argument
+    }
+
+    // Use snprintf to convert the integer to a string with the specified radix
+    int ret = snprintf(buffer, size, (radix == 10) ? "%d" : "%x", value);
+
+    if (ret < 0)
+    {
+        return EINVAL; // Encoding error
+    }
+    else if ((size_t)ret >= size)
+    {
+        return ERANGE; // Buffer too small
+    }
+
+    return 0; // Success
 }
 
 DWORD GetPrivateProfileStringA(

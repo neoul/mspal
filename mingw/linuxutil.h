@@ -4,6 +4,8 @@
 #include <dirent.h>
 #include <pal_mstypes.h>
 
+typedef int errno_t;
+
 typedef struct
 {
     char *name;      // Filename
@@ -23,6 +25,7 @@ int _findnext(long handle, _finddata_t *file);
 int _findclose(long handle);
 
 time_t _time32(time_t *__timer);
+errno_t _itoa_s(int value, char *buffer, size_t size, int radix);
 
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,
