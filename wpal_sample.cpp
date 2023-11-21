@@ -31,7 +31,6 @@
 #include <Poco/Data/RecordSet.h>
 // #include <Poco/Data/ODBC/Connector.h>
 #include <wpal.h>
-#include <ini_parser.h>
 
 #include <concurrent_queue.h>
 
@@ -147,4 +146,7 @@ int main()
 
      auto resultValue = GetPrivateProfileIntA("qwe", "qq", 0, "qwe");
      std::cout << "q: " << resultValue << std::endl;
+
+     _finddata_t fd;
+     intptr_t handle = _findfirst("qweq", &fd);
 }

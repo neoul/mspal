@@ -33,6 +33,7 @@
 #endif
 #include <palrt.h>
 #include <comutil.h>
+#include <linuxutil.h>
 
 #ifdef CALLBACK
 #undef CALLBACK
