@@ -1,6 +1,26 @@
 #pragma once
 
+#include <stdlib.h>
+#include <dirent.h>
 #include <pal_mstypes.h>
+
+typedef struct
+{
+    char *name;      // Filename
+    off_t size;      // File size
+    unsigned attrib; // File attributes
+    // Add other fields as necessary
+} _finddata_t;
+
+typedef struct
+{
+    DIR *dir;
+    struct dirent *entry;
+} DIRHANDLE;
+
+long _findfirst(const char *path, _finddata_t *file);
+int _findnext(long handle, _finddata_t *file);
+int _findclose(long handle);
 
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,

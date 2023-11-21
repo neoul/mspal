@@ -3,21 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <dirent.h>
-
-typedef struct
-{
-    char *name;      // Filename
-    off_t size;      // File size
-    unsigned attrib; // File attributes
-    // Add other fields as necessary
-} _finddata_t;
-
-typedef struct
-{
-    DIR *dir;
-    struct dirent *entry;
-} DIRHANDLE;
 
 long _findfirst(const char *path, _finddata_t *file)
 {

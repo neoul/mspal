@@ -146,4 +146,7 @@ int main()
 
      auto resultValue = GetPrivateProfileIntA("qwe", "qq", 0, "qwe");
      std::cout << "q: " << resultValue << std::endl;
+
+     _finddata_t fd;
+     intptr_t handle = _findfirst("qweq", &fd);
 }
