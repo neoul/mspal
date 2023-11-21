@@ -12,6 +12,17 @@
 typedef int errno_t;
 typedef size_t rsize_t;
 
+typedef struct _TIME_ZONE_INFORMATION
+{
+    LONG Bias;
+    WCHAR StandardName[32];
+    SYSTEMTIME StandardDate;
+    LONG StandardBias;
+    WCHAR DaylightName[32];
+    SYSTEMTIME DaylightDate;
+    LONG DaylightBias;
+} TIME_ZONE_INFORMATION, *PTIME_ZONE_INFORMATION, *LPTIME_ZONE_INFORMATION;
+
 typedef struct
 {
     char *name;      // Filename
@@ -29,6 +40,8 @@ typedef struct
 long _findfirst(const char *path, _finddata_t *file);
 int _findnext(long handle, _finddata_t *file);
 int _findclose(long handle);
+
+DWORD GetTimeZoneInformation(TIME_ZONE_INFORMATION *pTimeZoneInformation);
 
 time_t _time32(time_t *__timer);
 errno_t _itoa_s(int value, char *buffer, size_t size, int radix);

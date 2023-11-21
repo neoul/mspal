@@ -61,6 +61,27 @@ int _findclose(long handle)
     return 0;
 }
 
+DWORD GetTimeZoneInformation(TIME_ZONE_INFORMATION *pTimeZoneInformation)
+{
+    if (pTimeZoneInformation == NULL)
+    {
+        return -1; // Error
+    }
+
+    // Get the current time and localtime
+    time_t t = time(NULL);
+    struct tm *local = localtime(&t);
+
+    // Calculate the UTC offset (bias)
+    pTimeZoneInformation->Bias = -local->tm_gmtoff / 60;
+
+    // Get timezone names (standard and daylight)
+    strncpy(pTimeZoneInformation->StandardName, local->tm_zone, sizeof(pTimeZoneInformation->StandardName) - 1);
+    // Daylight saving time name can be more complex to retrieve, might require additional logic
+
+    return 0; // Success
+}
+
 time_t _time32(time_t *__timer)
 {
     return time(__timer);
