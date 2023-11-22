@@ -13,7 +13,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(SHORT_WCHAR ON)
 
 find_package(ODBC REQUIRED)
-find_package(ICU REQUIRED COMPONENTS uc io)
+find_package(ICU REQUIRED COMPONENTS uc io i18n)
+include_directories(${ICU_INCLUDE_DIRS})
 
 # add_compile_definitions(SQL_WCHART_CONVERT)
 include(FetchContent)
@@ -59,4 +60,4 @@ if(SHORT_WCHAR)
 endif(SHORT_WCHAR)
 
 add_executable(wpal_sample wpal_sample.cpp icu.example.cpp)
-target_link_libraries(wpal_sample PUBLIC wpal)
+target_link_libraries(wpal_sample PUBLIC wpal ${ICU_LIBRARIES})
