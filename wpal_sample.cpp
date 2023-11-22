@@ -34,6 +34,9 @@
 
 #include <concurrent_queue.h>
 
+void icu_utf8();
+void icu_euc_kr();
+
 using namespace std;
 using namespace Poco::Dynamic;
 
@@ -149,4 +152,8 @@ int main()
 
      _finddata_t fd;
      intptr_t handle = _findfirst("qweq", &fd);
+
+
+     icu_utf8();
+     icu_euc_kr();
 }

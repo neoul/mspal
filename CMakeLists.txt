@@ -13,6 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(SHORT_WCHAR ON)
 
 find_package(ODBC REQUIRED)
+find_package(ICU REQUIRED COMPONENTS uc io)
 
 # add_compile_definitions(SQL_WCHART_CONVERT)
 include(FetchContent)
@@ -29,15 +30,16 @@ if(NOT Poco_POPULATED)
 endif()
 
 FetchContent_Declare(
-    tbb
-    GIT_REPOSITORY https://github.com/wjakob/tbb.git
+  tbb
+  GIT_REPOSITORY https://github.com/wjakob/tbb.git
 )
 
 if(NOT tbb_POPULATED)
-    FetchContent_Populate(tbb)
-    add_subdirectory(${tbb_SOURCE_DIR} ${tbb_BINARY_DIR} EXCLUDE_FROM_ALL)
-    set_property(DIRECTORY ${tbb_SOURCE_DIR} APPEND PROPERTY COMPILE_DEFINITIONS -DTBB_TEST=OFF)
+  FetchContent_Populate(tbb)
+  add_subdirectory(${tbb_SOURCE_DIR} ${tbb_BINARY_DIR} EXCLUDE_FROM_ALL)
+  set_property(DIRECTORY ${tbb_SOURCE_DIR} APPEND PROPERTY COMPILE_DEFINITIONS -DTBB_TEST=OFF)
 endif()
+
 FetchContent_MakeAvailable(tbb)
 
 # FetchContent_MakeAvailable(poco)
@@ -47,11 +49,14 @@ file(GLOB wpal_sources mingw/*)
 add_library(wpal STATIC ${wpal_sources})
 add_dependencies(wpal Poco::Data Poco::DataODBC Poco::Foundation)
 target_include_directories(wpal PUBLIC mingw tbb Poco::Data Poco::DataODBC Poco::Foundation)
-target_link_libraries(wpal PUBLIC tbb Poco::Data Poco::DataODBC Poco::Foundation coreclrpal palrt)
+target_link_libraries(wpal
+  PUBLIC tbb Poco::Data Poco::DataODBC Poco::Foundation coreclrpal palrt
+  PRIVATE ICU::uc ICU::io
+)
 
 if(SHORT_WCHAR)
   target_compile_options(palrt PUBLIC -fshort-wchar)
 endif(SHORT_WCHAR)
 
-add_executable(wpal_sample wpal_sample.cpp)
+add_executable(wpal_sample wpal_sample.cpp icu.example.cpp)
 target_link_libraries(wpal_sample PUBLIC wpal)
