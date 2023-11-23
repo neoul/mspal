@@ -152,6 +152,59 @@ int64_t _wtoll(const wchar_t *str)
     return wcstoll(str, nullptr, 10);
 }
 
+char *_ui64toa(uint64_t value, char *str, int radix)
+{
+    if (str == nullptr)
+    {
+        return nullptr;
+    }
+
+    // Handle common cases using sprintf
+    if (radix == 10)
+    {
+        sprintf(str, "%llu", value);
+    }
+    else if (radix == 8)
+    {
+        sprintf(str, "%llo", value);
+    }
+    else if (radix == 16)
+    {
+        sprintf(str, "%llx", value);
+    }
+    else
+    {
+        // Implement a custom conversion for other radix values
+        // This is a simple implementation for demonstration
+        char *ptr = str;
+        char *ptr1 = str;
+        char tmp_char;
+        unsigned long long tmp_value;
+
+        do
+        {
+            tmp_value = value;
+            value /= radix;
+            *ptr++ = "0123456789abcdef"[tmp_value - value * radix];
+        } while (value);
+
+        // Apply negative sign if necessary
+        if (tmp_value < 0)
+            *ptr++ = '-';
+        *ptr-- = '\0';
+
+        // Reverse the string
+        while (ptr1 < ptr)
+        {
+            tmp_char = *ptr;
+            *ptr-- = *ptr1;
+            *ptr1++ = tmp_char;
+        }
+    }
+
+    return str;
+}
+
 DWORD GetFileAttributesA(LPCSTR lpFileName)
 {
     struct stat fileInfo;

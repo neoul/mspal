@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <dirent.h>
+#include <stdint.h>
 #include <pal_mstypes.h>
 #include <pal.h>
 
@@ -41,6 +42,7 @@ char *_itoa(int value, char *str, int base);
 int _wtoi(const wchar_t *str);
 int64_t _wtoi64(const wchar_t *str);
 int64_t _wtoll(const wchar_t *str);
+char *_ui64toa(uint64_t value, char *str, int radix);
 
 DWORD GetFileAttributesA(LPCSTR lpFileName);
 BOOL CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes);
