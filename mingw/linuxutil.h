@@ -34,6 +34,8 @@ time_t _time32(time_t *__timer);
 errno_t _itoa_s(int value, char *buffer, size_t size, int radix);
 errno_t strcpy_s(char *dest, rsize_t destsz, const char *src);
 char *_itoa(int value, char *str, int base);
+int _wtoi(const wchar_t *str);
+int64_t _wtoi64(const wchar_t *str);
 
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,

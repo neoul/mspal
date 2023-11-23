@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <errno.h>
+#include <cwchar>
 
 long _findfirst(const char *path, _finddata_t *file)
 {
@@ -128,6 +129,16 @@ char *_itoa(int value, char *str, int base)
 
     sprintf(str, "%d", value); // For simplicity, using %d for all bases
     return str;
+}
+
+int _wtoi(const wchar_t *str)
+{
+    return static_cast<int>(wcstol(str, nullptr, 10));
+}
+
+int64_t _wtoi64(const wchar_t *str)
+{
+    return wcstoll(str, nullptr, 10);
 }
 
 DWORD GetPrivateProfileStringA(
