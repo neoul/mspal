@@ -141,6 +141,11 @@ int64_t _wtoi64(const wchar_t *str)
     return wcstoll(str, nullptr, 10);
 }
 
+int64_t _wtoll(const wchar_t *str)
+{
+    return wcstoll(str, nullptr, 10);
+}
+
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,
     LPCSTR lpKeyName,

@@ -36,6 +36,7 @@ errno_t strcpy_s(char *dest, rsize_t destsz, const char *src);
 char *_itoa(int value, char *str, int base);
 int _wtoi(const wchar_t *str);
 int64_t _wtoi64(const wchar_t *str);
+int64_t _wtoll(const wchar_t *str);
 
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,
