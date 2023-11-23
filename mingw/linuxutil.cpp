@@ -6,6 +6,7 @@
 #include <time.h>
 #include <errno.h>
 #include <cwchar>
+#include <sys/stat.h>
 
 long _findfirst(const char *path, _finddata_t *file)
 {
@@ -71,7 +72,6 @@ time_t _time64(time_t *__timer)
 {
     return time(__timer);
 }
-
 
 errno_t _itoa_s(int value, char *buffer, size_t size, int radix)
 {
@@ -150,6 +150,36 @@ int64_t _wtoi64(const wchar_t *str)
 int64_t _wtoll(const wchar_t *str)
 {
     return wcstoll(str, nullptr, 10);
+}
+
+DWORD GetFileAttributesA(LPCSTR lpFileName)
+{
+    struct stat fileInfo;
+    if (stat(lpFileName, &fileInfo) != 0)
+    {
+        return INVALID_FILE_ATTRIBUTES;
+    }
+
+    DWORD attributes = 0;
+
+    // Set attributes based on the stat structure
+    if (S_ISDIR(fileInfo.st_mode))
+    {
+        attributes |= FILE_ATTRIBUTE_DIRECTORY;
+    }
+    if (lpFileName[0] == '.')
+    {
+        attributes |= FILE_ATTRIBUTE_HIDDEN;
+    }
+    // Add more attribute checks as needed
+
+    return attributes;
+}
+
+BOOL CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes)
+{
+    // Ignore lpSecurityAttributes as they don't map directly to Linux permissions
+    return mkdir(lpPathName, 0755) == 0; // 0755 are the default permissions
 }
 
 DWORD GetPrivateProfileStringA(

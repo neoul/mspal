@@ -9,6 +9,8 @@
 #define RSIZE_MAX (SIZE_MAX >> 1)
 #endif
 
+#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+
 typedef time_t __time64_t;
 typedef int errno_t;
 typedef size_t rsize_t;
@@ -40,7 +42,8 @@ int _wtoi(const wchar_t *str);
 int64_t _wtoi64(const wchar_t *str);
 int64_t _wtoll(const wchar_t *str);
 
-
+DWORD GetFileAttributesA(LPCSTR lpFileName);
+BOOL CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 DWORD GetPrivateProfileStringA(
     LPCSTR lpAppName,
     LPCSTR lpKeyName,
@@ -48,17 +51,14 @@ DWORD GetPrivateProfileStringA(
     LPSTR lpReturnedString,
     DWORD nSize,
     LPCSTR lpFileName);
-
 UINT GetPrivateProfileIntA(
     LPCSTR lpAppName,
     LPCSTR lpKeyName,
     INT nDefault,
     LPCSTR lpFileName);
-
 DWORD GetModuleFileNameA(
     HMODULE hModule,
     LPSTR lpFilename,
     DWORD nSize);
-
 BOOL PathRemoveFileSpecA(
     LPSTR pszPath);
