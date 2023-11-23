@@ -67,6 +67,12 @@ time_t _time32(time_t *__timer)
     return time(__timer);
 }
 
+time_t _time64(time_t *__timer)
+{
+    return time(__timer);
+}
+
+
 errno_t _itoa_s(int value, char *buffer, size_t size, int radix)
 {
     if (buffer == NULL || size == 0 || radix < 2 || radix > 36)
